@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width", initial-scale="1">    
+        <title> homepage </title>
+        <link rel="stylesheet" href="mystyles.css">
+        <style type="text/css">
+            body {
+                background-image: url(); 
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-position: center;  
+                min-height: 100vh;
+               
+            }
+
+            .spacer1 {
+                height: 200px;
+                background-color: #F5CC97 ;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 0 20px; 
+                box-sizing: border-box; 
+                margin-top: 70px;
+                color: #F55D33;
+                font-size: 40px;
+                
+            }
+
+            .spacer1 h1 {
+                color: #F55D33;
+                font-size: 43px;
+                margin-right: 20px;
+                font-weight: normal;
+            }
+
+            .text {
+                color: #F55D33;
+                font-size: 20px;
+                max-width: 800px;
+                opacity: 0;
+                margin: 0 auto;
+                transition: opacity 1s ease-in-out;
+                line-height: 1.6;
+                font-weight: bold;
+            }
+
+            .fade{
+                color: #F55D33;
+                font-size: 40px;
+                opacity: 0;
+                transition: opacity 1s ease-in-out;
+            }
+
+
+            @media (max-width: 499px) {
+                .fade {
+                    font-size:30px;
+                }
+            }
+
+            @media screen and (min-width: 900px) {
+                .spacer1 h1 {
+                display: block;
+                }
+            }
+
+            @media screen and (max-width: 899px) {
+                .spacer1 h1 {
+                    display: none;
+                }
+            }
+</style>  
+    </head>
+    <body>
+        <nav>
+            <div class="bar">
+                <a href="home.html">
+                    <p> Dashboard Home</p>
+                </a>
+                <div class="navlinks">
+                    <a href="llm.html" class="navlink">LLM</a>
+                    <a href="timeline.html" class="navlink">Timeline</a>
+                    <a href="graph.html" class="navlink">Graph</a>
+                    <a href="people.html" class="navlink">People</a>
+                    <a href="organizations.html" class="navlink">Organizations</a>
+                    <a href="words.html" class="navlink">Word Cloud</a>
+                </div>
+                <a href="#" class="hamburger">&#9776;</a>      
+            </div>
+        </nav>
+
+        <div class="spacer1">
+            <h1> Mini Challange 1: </h1> 
+            <div class="fade">
+               Text Analysis
+            </div>      
+        </div>
+
+        <section class="section1"> </section>
+        
+        <div class="spacer2">
+            <div class="text" >
+               
+            </div>
+        </div>
+
+        <section class="section2"> </section>
+
+      
+
+        <footer>
+            <div class="footercontent" >
+                <a href="home.html">  <p> Dashboard Home</p>  </a>
+              </div>
+        </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            setTimeout(function() {
+                $('.fade').fadeTo(400, 1);
+                $('.text').fadeTo(300, 1);
+                $('.review').fadeTo(300, 1);
+            }, 300);
+         
+        });
+    </script>
+        <script>
+           document.addEventListener('DOMContentLoaded', function () {
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.navlinks');
+
+            hamburger.addEventListener('click', function () {
+                navLinks.classList.toggle('show');
+            });
+            })
+
+          
+         </script>
+
+    </body>
+</html>

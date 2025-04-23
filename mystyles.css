@@ -1,0 +1,165 @@
+/* colors to work with: 
+    cream color: #F8F4E3
+    color: #F5CC97;
+    color: F5BD33;
+    color: #F55D33;
+    color: #F57F33;
+
+font:  
+    font-family: 'American Typewriter', serif;
+    font-weight: normal; */
+
+    nav {
+        background-color:  #F55D33; 
+        position: fixed;
+        width: 100%; 
+        z-index: 1000;
+        font-size: 23px;
+        top: 0;
+    }
+    
+    nav a {
+        color:#F5CC97;
+        text-decoration: none;
+        font-family: 'American Typewriter', serif;
+        font-weight: normal;
+        margin-right: 30px; 
+    }
+    
+    nav a:hover {
+        color: #F5BD33;
+    }
+    
+    nav .bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'American Typewriter', serif;
+        font-weight: normal;
+    }
+    
+    
+    footer {
+        background-color: #F55D33 ; 
+        color: #F5CC97; 
+        text-align: center;
+        padding: .5px 0; 
+        position: fixed; 
+        bottom: 0; 
+        width: 100%; 
+        z-index: 1000; 
+        left: 0;
+    }
+    .footercontent {
+        display: flex;
+        align-items: center;
+        justify-content: right;
+        margin-right: 10px;
+        font-size: 14px;
+        font-family: 'American Typewriter', serif;
+        font-weight: normal;
+    }
+    
+    .footercontent img {
+        margin-right: 10px;
+    }
+    
+    @media screen and (min-width: 900px) {
+        .hamburger {
+            display: none;
+        }
+    }
+    
+    @media screen and (max-width: 1022px) {
+        .hamburger {
+            display: block;
+            font-size: 40px;
+        }
+    
+        .navlinks.show {
+            display: block;
+            padding: 10px 0;
+            margin-right: 10px;
+        }
+    
+        .navlinks {
+            background-color: #F5BD33;
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 10px;
+            width: 100%;
+            max-width: 200px;
+            text-align: center; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            display: none;
+        }
+    
+        nav a:hover {
+            font-weight: bold;
+            color:#F55D33
+            
+        }
+        .hamburger:hover {
+           color: #F5BD33;
+        }
+    
+        .navlinks a {
+            margin: 0; 
+            padding: 10px 0; 
+            margin-top: 0px;
+            display: block;
+            color: #F55D33;
+    
+            
+        }
+    }
+    
+    
+    @media screen and (max-width: 530px) {
+        .footercontent {
+            font-size: 10px;
+        }
+    }
+
+    .HistoricDocs,
+.NewsSource {
+    text-align: center;
+    padding: 100px 20px 80px; /* top padding accounts for nav, bottom for footer */
+    margin: 0 auto;
+    max-width: 1000px;
+}
+
+.HistoricDocs h1,
+.NewsSource h1 {
+    font-size: 32px;
+    margin-bottom: 30px;
+    color: #F55D33; /* Optional: color to match theme */
+}
+
+/* Make iframes responsive and larger */
+.HistoricDocs iframe,
+.NewsSource iframe {
+    margin: 10px;
+    width: 95%;
+    height: 400px;
+    border: none;
+}
+
+/* Prevent overflow on small screens */
+@media screen and (max-width: 768px) {
+    .HistoricDocs iframe,
+    .NewsSource iframe {
+        width: 90%;
+        height: 300px;
+    }
+}
+
+    
+   
