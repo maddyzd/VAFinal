@@ -74,6 +74,10 @@ font:
             display: none;
         }
     }
+
+    h1 {
+        color: #F55D33; 
+    }
     
     @media screen and (max-width: 1022px) {
         .hamburger {
