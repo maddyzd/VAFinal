@@ -1,35 +1,32 @@
 document.getElementById("sourceForm").addEventListener("submit", function(e) {
     e.preventDefault();
 
-    // Get selected folder values
-    const folders = Array.from(document.querySelectorAll("input[name='folder']:checked"))
-                         .map(cb => cb.value);
+    const selectedFolders = Array.from(document.querySelectorAll("input[name='folder']:checked"))
+                                 .map(cb => cb.value);
 
-    // Send folders to Flask via POST
     fetch("/wordcloud", {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ folders })
+        body: JSON.stringify({ folders: selectedFolders })
     })
-    .then(res => res.json())
-    .then(data => renderWordCloud(data));
+    .then(response => response.json())
+    .then(renderWordCloud);
 });
 
-function renderWordCloud(words) {
-    // Clear previous word cloud
+function renderWordCloud(wordData) {
     d3.select("#wordcloud").selectAll("*").remove();
 
     const layout = d3.layout.cloud()
         .size([800, 500])
-        .words(words.map(d => ({ text: d[0], size: 10 + d[1] })))
+        .words(wordData.map(d => ({ text: d[0], size: 10 + d[1] })))
         .padding(5)
-        .rotate(() => ~~(Math.random() * 2) * 90)
+        .rotate(() => (Math.random() < 0.5 ? 0 : 90))
         .fontSize(d => d.size)
-        .on("end", draw);
+        .on("end", drawCloud);
 
     layout.start();
 
-    function draw(words) {
+    function drawCloud(words) {
         d3.select("#wordcloud")
             .append("svg")
             .attr("width", 800)
@@ -39,10 +36,10 @@ function renderWordCloud(words) {
             .selectAll("text")
             .data(words)
             .enter().append("text")
-            .style("font-size", d => d.size + "px")
+            .text(d => d.text)
+            .style("font-size", d => `${d.size}px`)
             .style("fill", () => d3.schemeCategory10[Math.floor(Math.random() * 10)])
             .attr("text-anchor", "middle")
-            .attr("transform", d => `translate(${d.x},${d.y}) rotate(${d.rotate})`)
-            .text(d => d.text);
+            .attr("transform", d => `translate(${d.x},${d.y}) rotate(${d.rotate})`);
     }
 }
