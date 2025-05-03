@@ -3,10 +3,38 @@ from collections import Counter
 import os
 import re
 import csv
+from pathlib import Path
+from haystack.components.builders.prompt_builder import PromptBuilder
+from haystack_integrations.components.generators.google_ai import GoogleAIGeminiGenerator
+from haystack import Pipeline
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 
 SOURCE_DIR = 'sources'
+RAG_gen_template = """
+Given the following contexts, answer the question to the best of your ability.
+Context: 
+
+    {{ all_context }}
+
+Question: {{ query }}
+"""
+
+answer_prompt_builder = PromptBuilder(template=RAG_gen_template, required_variables={"all_context", "query"})
+answer_generator = GoogleAIGeminiGenerator(model="gemini-2.0-flash-lite")
+
+answer_pipeline = Pipeline()
+
+
+answer_pipeline.add_component("answer_builder", answer_prompt_builder) 
+answer_pipeline.add_component("llm_answer_generator", answer_generator) 
+
+answer_pipeline.connect("answer_builder", "llm_answer_generator")
 
 
 def get_source_folders():
@@ -14,6 +42,9 @@ def get_source_folders():
     if 'email_headers.csv' in os.listdir(SOURCE_DIR):
         folders.append('email_headers.csv')
     return folders
+
+
+FOLDERS = get_source_folders()
 
 def load_documents_by_folders(selected_folders):
     text = ""
@@ -79,13 +110,12 @@ def organizations():
 
 @app.route('/llm')
 def llm():
-    return render_template('llm.html')
+    return render_template('llm.html', folders=FOLDERS)
 
 
 @app.route('/words')
 def words_page():
-    folders = get_source_folders()
-    return render_template('words.html', folders=folders)
+    return render_template('words.html', folders=FOLDERS)
 
 @app.route('/wordcloud', methods=['POST'])
 def wordcloud():
@@ -94,6 +124,55 @@ def wordcloud():
     words = clean_text(raw_text)
     freqs = Counter(words).most_common(int(request.json.get('words', 50)))
     return jsonify(freqs)
+
+
+def get_all_content(path):
+    path = Path(path)
+    all_contents = ""
+    # If the path is a dir, recursively call get_all content on it
+    if path.is_dir():
+        for sub_path in path.iterdir():
+            all_contents += get_all_content(sub_path)
+    # Otherwise, the path is a file, so read it and add its contents
+    else:
+        print(path)
+        with open(path, 'r', errors='ignore') as f:
+            all_contents = f.read()
+    
+    return all_contents
+            
+
+
+@app.route('/llm_query', methods=['POST'])
+def llm_query():
+    user_query = request.json.get('query', "")
+    selected_folders = request.json.get('folders', [])
+    folder_content = {}
+    for folder in selected_folders:
+        folder_content[folder] = get_all_content(os.path.join(SOURCE_DIR, folder))
+        print(f"For folder: {folder}, the first 100 chars of content are:")
+        print(folder_content[folder][:100])
+        print("and the last 100 chars of content are:")
+        print(folder_content[folder][-100:])
+
+    all_context = ""
+    for folder in selected_folders:
+        all_context += f"Source: {folder}\n\n Content: {folder_content[folder]}\n\n"
+
+    answer_results = answer_pipeline.run(
+        data={
+            "answer_builder":{
+                "all_context": all_context,
+                "query": user_query
+            }
+        }
+    )
+    answer = str(answer_results['llm_answer_generator']['replies'][0])
+    # supporting_titles = '\n'.join([document.meta['title'] for document in retrieval_results['document_retriever']['documents']])
+
+    print(answer)
+    
+    return jsonify(answer)
 
 nodes = [
     # Organizations
@@ -246,4 +325,4 @@ links = [
 # --- Start the App ---
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, use_reloader=False)
