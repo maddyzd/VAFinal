@@ -164,22 +164,3 @@ font:
         height: 300px;
     }
 }
-
-    
-label {
-    display: inline-block;
-    margin-right: 20px;
-    margin-bottom: 10px;
-}
-
-.range-label {
-    display: inline-flex;
-    align-items: center; /* vertically center label + inputs */
-    gap: 10px; /* space between 'Words:' and inputs */
-}
-
-.range-inputs {
-    display: flex;
-    align-items: center; /* align the range slider and number input */
-    gap: 10px; /* space between range slider and number box */
-}
