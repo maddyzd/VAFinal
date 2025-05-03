@@ -92,7 +92,7 @@ def wordcloud():
     selected = request.json.get('folders', [])
     raw_text = load_documents_by_folders(selected)
     words = clean_text(raw_text)
-    freqs = Counter(words).most_common(100)
+    freqs = Counter(words).most_common(int(request.json.get('words', 50)))
     return jsonify(freqs)
 
 # --- Start the App ---
