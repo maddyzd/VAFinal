@@ -7,7 +7,6 @@ document.getElementById("sourceForm").addEventListener("submit", function(e) {
     const words = d3.select("#word-range").property("value")
     console.log(words)
 
-    // Send folders to Flask via POST
     fetch("/wordcloud", {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
@@ -47,10 +46,10 @@ function renderWordCloud(words) {
             .selectAll("text")
             .data(words)
             .enter().append("text")
-            .style("font-size", d => d.size + "px")
+            .text(d => d.text)
+            .style("font-size", d => `${d.size}px`)
             .style("fill", () => d3.schemeCategory10[Math.floor(Math.random() * 10)])
             .attr("text-anchor", "middle")
-            .attr("transform", d => `translate(${d.x},${d.y}) rotate(${d.rotate})`)
-            .text(d => d.text);
+            .attr("transform", d => `translate(${d.x},${d.y}) rotate(${d.rotate})`);
     }
 }
