@@ -38,4 +38,15 @@ function appendMessage(sender, text) {
 
     // Scroll to bottom
     chatHistory.node().scrollTop = chatHistory.node().scrollHeight;
+
+    localStorage.setItem("chatHistoryHTML", chatHistory.node().innerHTML);
 }
+
+window.addEventListener("DOMContentLoaded", () => {
+    const chatHistory = document.getElementById("chat-history");
+    const saved = localStorage.getItem("chatHistoryHTML");
+    console.log("reloaded DOM content!")
+    if (saved != null) {
+        chatHistory.innerHTML = saved;
+    }
+});
