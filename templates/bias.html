@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bias Dashboard</title>
+  <link rel="stylesheet" href="static/css/mystyles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .container {
+      width: 90%;
+      margin: 40px auto;
+      display: flex;
+      flex-direction: column;
+      gap: 50px;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 400px !important;
+    }
+
+    #mentionTable {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    #mentionTable th,
+    #mentionTable td {
+      border: 1px solid #333;
+      padding: 8px;
+      text-align: center;
+    }
+
+    #controls {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    #sourceSelector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 20px;
+    }
+
+    #sourceSelector label {
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="text-align: center;">Bias Dashboard</h1>
+
+  <div class="container">
+    <div id="controls">
+      <div>
+        <label for="personFilter"><strong>View:</strong></label>
+        <select id="personFilter">
+          <option value="compare-groups">Compare Groups</option>
+          <option value="all">Most Relevant 5 Individuals</option>
+          <option value="gastech">GAStech Employees</option>
+          <option value="pok">Protectors of Kronos</option>
+        </select>
+      </div>
+
+      <div>
+        <strong>Select News Sources:</strong>
+        <div id="sourceSelector"></div>
+      </div>
+    </div>
+
+    <section class="chart-section">
+      <h2>Sentiment Comparison (by Person or Group)</h2>
+      <p>This chart displays the sentiment score toward each selected person or group across news sources, ranging from -1 (negative) to +1 (positive).</p>
+      <canvas id="sentimentChart"></canvas>
+    </section>
+
+    <section class="heatmap-section">
+      <h2>Mention Count Heatmap</h2>
+      <p>This heatmap shows how often each selected individual or group was mentioned by each news source. Darker red means higher mention count.</p>
+      <table id="mentionTable">
+        <thead></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </div>
+
+  <script src="static/js/bias.js"></script>
+</body>
+</html>

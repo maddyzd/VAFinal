@@ -81,6 +81,10 @@ def organizations():
 def llm():
     return render_template('llm.html')
 
+@app.route('/bias')
+def bias():
+    return render_template('bias.html')
+
 
 @app.route('/words')
 def words_page():
