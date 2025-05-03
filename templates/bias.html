@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bias Dashboard</title>  
+    <link rel="stylesheet" href="static/css/mystyles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .container {
+            width: 90%;
+            margin: 40px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 400px !important;
+        }
+
+        #mentionTable {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        #mentionTable th,
+        #mentionTable td {
+            border: 1px solid #333;
+            padding: 8px;
+            text-align: center;
+        }
+
+        #controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        #sourceSelector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 20px;
+        }
+
+        #sourceSelector label {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="bar">
+            <a href="/">
+                <p> Dashboard Home</p>
+            </a>
+            <div class="navlinks">
+                <a href="/llm" class="navlink">LLM</a>
+                <a href="/timeline" class="navlink">Timeline</a>
+                <a href="/graph" class="navlink">Graph</a>
+                <a href="/people" class="navlink">People</a>
+                <a href="/organizations" class="navlink">Organizations</a>
+                <a href="/words" class="navlink">Word Cloud</a>
+                <a href="/bias" class="navlink">Bias Dashboard</a>
+            </div>
+            <a href="#" class="hamburger">&#9776;</a>      
+        </div>
+    </nav>
+
+    <h1 style="text-align: center; color: #0f0f0f; margin-top: 140px; font-size: 42px; font-family: 'American Typewriter', serif;">Bias Dashboard</h1>
+    <p style="text-align: center; font-family: 'American Typewriter', serif; color: #333; font-size: 18px; margin-bottom: 30px;">
+        Use the dropdown and checkboxes below to explore sentiment and mention bias across news sources.
+    </p>
+
+    <div class="container">
+        <div id="controls">
+            <div>
+                <label for="personFilter"><strong>View:</strong></label>
+                <select id="personFilter">
+                    <option value="all">Default 5 Individuals</option>
+                    <option value="gastech">GAStech Employees</option>
+                    <option value="pok">Protectors of Kronos</option>
+                    <option value="compare-groups" selected>Compare Groups</option>
+                </select>
+            </div>
+
+            <div>
+                <strong>Select News Sources:</strong>
+                <div id="sourceSelector"></div>
+            </div>
+        </div>
+
+        <section class="chart-section">
+            <h2>Sentiment Comparison (by Person or Group)</h2>
+            <p>This chart displays the sentiment score toward each selected person or group across news sources, ranging from -1 (negative) to +1 (positive).</p>
+            <canvas id="sentimentChart"></canvas>
+        </section>
+
+        <section class="heatmap-section">
+            <h2>Mention Count Heatmap</h2>
+            <p>This heatmap shows how often each selected individual or group was mentioned by each news source. Darker red means higher mention count.</p>
+            <table id="mentionTable">
+                <thead></thead>
+                <tbody></tbody>
+            </table>
+        </section>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.navlinks');
+
+            hamburger.addEventListener('click', function () {
+                navLinks.classList.toggle('show');
+            });
+        });
+    </script>
+    <script src="static/js/bias.js"></script>
+</body>
+</html>
