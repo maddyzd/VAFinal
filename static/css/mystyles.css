@@ -10,7 +10,7 @@ font:
     font-weight: normal; */
 
     nav {
-        background-color:  #F55D33; 
+        background-color:  #dfd5c6; 
         position: fixed;
         width: 100%; 
         z-index: 1000;
@@ -19,15 +19,16 @@ font:
     }
     
     nav a {
-        color:#F5CC97;
+        color:#0f0f0f;
         text-decoration: none;
         font-family: 'American Typewriter', serif;
         font-weight: normal;
         margin-right: 30px; 
+        margin-left: 10px;
     }
     
     nav a:hover {
-        color: #F5BD33;
+        color: #807b7b;
     }
     
     nav .bar {
@@ -44,31 +45,6 @@ font:
     }
     
     
-    footer {
-        background-color: #F55D33 ; 
-        color: #F5CC97; 
-        text-align: center;
-        padding: .5px 0; 
-        position: fixed; 
-        bottom: 0; 
-        width: 100%; 
-        z-index: 1000; 
-        left: 0;
-    }
-    .footercontent {
-        display: flex;
-        align-items: center;
-        justify-content: right;
-        margin-right: 10px;
-        font-size: 14px;
-        font-family: 'American Typewriter', serif;
-        font-weight: normal;
-    }
-    
-    .footercontent img {
-        margin-right: 10px;
-    }
-    
     @media screen and (min-width: 900px) {
         .hamburger {
             display: none;
@@ -76,7 +52,7 @@ font:
     }
 
     h1 {
-        color: #F55D33; 
+        color: #0f0f0f; 
     }
     
     @media screen and (max-width: 1022px) {
@@ -92,7 +68,7 @@ font:
         }
     
         .navlinks {
-            background-color: #F5BD33;
+            background-color: #dfd5c6;
             position: absolute;
             top: calc(100% + 10px);
             right: 10px;
@@ -107,11 +83,11 @@ font:
     
         nav a:hover {
             font-weight: bold;
-            color:#F55D33
+            color:#807b7b
             
         }
         .hamburger:hover {
-           color: #F5BD33;
+           color: #807b7b;
         }
     
         .navlinks a {
@@ -119,7 +95,7 @@ font:
             padding: 10px 0; 
             margin-top: 0px;
             display: block;
-            color: #F55D33;
+            color: #0f0f0f;
     
             
         }
@@ -144,7 +120,7 @@ font:
 .NewsSource h1 {
     font-size: 32px;
     margin-bottom: 30px;
-    color: #F55D33; /* Optional: color to match theme */
+    color: #0f0f0f; /* Optional: color to match theme */
 }
 
 /* Make iframes responsive and larger */

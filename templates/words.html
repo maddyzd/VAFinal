@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="static/css/mystyles.css" />
 
     <!-- Load D3 + d3-cloud libraries -->
-    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"></script>
 </head>
 
@@ -32,19 +32,22 @@
         <h1>Select Source Categories</h1>
         <form id="sourceForm">
             {% for folder in folders %}
-                <label><input type="checkbox" name="folder" value="{{ folder }}"> {{ folder }}</label><br>
+                <label><input type="checkbox" name="folder" value="{{ folder }}"> {{ folder }}</label>
             {% endfor %}
+            <br>
+            <label class="range-label">
+                Words: 
+                <div class="range-inputs">
+                    <input id="word-range" type="range" min="5" max="100" step="5" value="50" name="word range" oninput="this.nextElementSibling.value=this.value">
+                    <input type="number" name="word amt" min="5" max="100" value="50" oninput="this.previousElementSibling.value=this.value" />
+                </div>
+            </label>
             <button type="submit">Generate Word Cloud</button>
         </form>
         
         <div id="wordcloud" style="margin-top: 30px;"></div>
     </main>
 
-    <footer>
-        <div class="footercontent">
-            <a href="/"><p>Dashboard Home</p></a>
-        </div>
-    </footer>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -67,6 +70,6 @@
         });
     </script>
 
-    <script src="static/script.js"></script>
+    <script src="static/words.js"></script>
 </body>
 </html>
