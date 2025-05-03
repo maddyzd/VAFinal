@@ -43,10 +43,14 @@ function appendMessage(sender, text) {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-    const chatHistory = document.getElementById("chat-history");
-    const saved = localStorage.getItem("chatHistoryHTML");
-    console.log("reloaded DOM content!")
-    if (saved != null) {
-        chatHistory.innerHTML = saved;
+    const isReload = performance.getEntriesByType("navigation")[0]?.type === "reload";
+    if (isReload) {
+        localStorage.removeItem("chatHistoryHTML");
+    } else {
+        // Restore chat only if not a hard reload
+        const saved = localStorage.getItem("chatHistoryHTML");
+        if (saved != null) {
+            document.getElementById("chat-history").innerHTML = saved;
+        }
     }
 });

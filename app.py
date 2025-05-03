@@ -22,9 +22,19 @@ Context:
 
     {{ all_context }}
 
-Question: {{ query }}?
+Question: {{ query }}
 """
 
+answer_prompt_builder = PromptBuilder(template=RAG_gen_template, required_variables={"all_context", "query"})
+answer_generator = GoogleAIGeminiGenerator(model="gemini-2.0-flash-lite")
+
+answer_pipeline = Pipeline()
+
+
+answer_pipeline.add_component("answer_builder", answer_prompt_builder) 
+answer_pipeline.add_component("llm_answer_generator", answer_generator) 
+
+answer_pipeline.connect("answer_builder", "llm_answer_generator")
 
 
 def get_source_folders():
@@ -149,16 +159,6 @@ def llm_query():
     for folder in selected_folders:
         all_context += f"Source: {folder}\n\n Content: {folder_content[folder]}\n\n"
 
-    answer_prompt_builder = PromptBuilder(template=RAG_gen_template, required_variables={"all_context", "query"})
-    answer_generator = GoogleAIGeminiGenerator(model="gemini-2.0-flash-lite")
-
-    answer_pipeline = Pipeline()
-
-
-    answer_pipeline.add_component("answer_builder", answer_prompt_builder) 
-    answer_pipeline.add_component("llm_answer_generator", answer_generator) 
-
-    answer_pipeline.connect("answer_builder", "llm_answer_generator")
     answer_results = answer_pipeline.run(
         data={
             "answer_builder":{
@@ -325,4 +325,4 @@ links = [
 # --- Start the App ---
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, use_reloader=False)
