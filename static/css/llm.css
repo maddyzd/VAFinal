@@ -1,0 +1,74 @@
+#chat-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    padding-bottom: 50px;
+}
+
+#chat-form {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    width: 70%;
+    align-self: center;
+    flex-direction: column;
+}
+
+#llm_query {
+    flex: 1;
+    padding: 8px;
+}
+
+#chat-history {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    overflow-y: auto;
+    gap: 10px; /* space between messages */
+    width: 70%;
+    align-self: center;
+}
+  
+  /* Shared message bubble base */
+.user-message,
+.llm-message {
+    max-width: 70%;
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 15px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    text-align: left;
+    white-space: pre-wrap;
+}
+  
+  /* LLM responses: align left */
+.llm-message {
+    align-self: flex-start;
+    background-color: #f0f0f0;
+    border-top-left-radius: 0;
+}
+  
+  /* User questions: align right */
+.user-message {
+    align-self: flex-end;
+    background-color: #daf1ff;
+    border-top-right-radius: 0;
+}
+
+.llm-source-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+  
+.llm-source-checkboxes label {
+    margin-bottom: 5px;
+}
+
+.llm-input {
+    display: flex;
+    gap: 10px;
+}

@@ -5,7 +5,9 @@
         <meta name="viewport" content="width=device-width", initial-scale="1">    
         <title> llm </title>
         <link rel="stylesheet" href="static/css/mystyles.css" />
- 
+        <link rel="stylesheet" href="static/css/llm.css" />
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     </head>
     <body>
         <nav>
@@ -24,7 +26,26 @@
                 <a href="#" class="hamburger">&#9776;</a>      
             </div>
         </nav>
+        <main style="margin-top: 100px; text-align: center;">
+            <h1>Please enter your query</h1>
+            <div id="chat-container">
+                <div id="chat-history"></div>
+                <form id="chat-form">
+                    <div class="llm-input">
+                        <input type="text" id="llm_query" placeholder="Insert query here" autocomplete="off" />
+                        <input id="submit_llm_query" type="button" value="Submit">
+                    </div>
+                    <div class="llm-source-checkboxes">
+                        {% for folder in folders %}
+                        <label><input type="checkbox" name="folder" value="{{ folder }}"> {{ folder }}</label>
+                        {% endfor %}
+                    </div>
 
+                </form>
+            </div>
+            
+        </main>
+        
         
         <footer>
             <div class="footercontent">
@@ -55,6 +76,6 @@
 
           
          </script>
-
+         <script src="static/llm.js"></script>
     </body>
 </html>
