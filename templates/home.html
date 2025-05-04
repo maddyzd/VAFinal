@@ -1,132 +1,152 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width", initial-scale="1">    
-        <title> homepage </title>
-        <link rel="stylesheet" href="static/css/mystyles.css" />
-        <style type="text/css">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Homepage</title>
+  <link rel="stylesheet" href="static/css/mystyles.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Helvetica Neue', sans-serif;
+      background-color: #fffaf2;
+    }
 
-            .spacer1 {
-                height: 200px;
-                background-color: #F5CC97 ;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                padding: 0 20px; 
-                box-sizing: border-box; 
-                margin-top: 70px;
-                color: #F55D33;
-                font-size: 40px;
-                
-            }
+    .spacer1 {
+      height: 200px;
+      background-color: #F5CC97;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0 20px;
+      box-sizing: border-box;
+      margin-top: 0;
+      color: #F55D33;
+      font-size: 40px;
+    }
 
-            .spacer1 h1 {
-                color: #F55D33;
-                font-size: 43px;
-                margin-right: 20px;
-                font-weight: normal;
-            }
+    .spacer1 h1 {
+      color: #F55D33;
+      font-size: 43px;
+      font-weight: normal;
+      margin: 0;
+    }
 
-            .text {
-                color: #F55D33;
-                font-size: 20px;
-                max-width: 800px;
-                opacity: 0;
-                margin: 0 auto;
-                transition: opacity 1s ease-in-out;
-                line-height: 1.6;
-                font-weight: bold;
-            }
+    .dashboard-section {
+      padding: 60px 40px;
+      background-color: #fffaf2;
+    }
 
-            .fade{
-                color: #F55D33;
-                font-size: 40px;
-                opacity: 0;
-                transition: opacity 1s ease-in-out;
-            }
+    .iframe-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 30px;
+      max-width: 1200px;
+      margin: auto;
+      justify-content: center;
+    }
 
+    .iframe-tile {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s;
+      background-color: white;
+    }
 
-            @media (max-width: 499px) {
-                .fade {
-                    font-size:30px;
-                }
-            }
+    .iframe-tile:hover {
+      transform: scale(1.02);
+    }
 
-            @media screen and (min-width: 900px) {
-                .spacer1 h1 {
-                display: block;
-                }
-            }
+    .iframe-tile iframe {
+      width: 100%;
+      height: 250px;
+      border: none;
+      pointer-events: none;
+      overflow: hidden;
+    }
 
-            @media screen and (max-width: 899px) {
-                .spacer1 h1 {
-                    display: none;
-                }
-            }
-</style>  
-    </head>
-    <body>
-        <nav>
-            <div class="bar">
-                <a href="/">
-                    <p> Dashboard Home</p>
-                </a>
-                <div class="navlinks">
-                    <a href="/llm" class="navlink">LLM</a>
-                    <a href="/timeline" class="navlink">Timeline</a>
-                    <a href="/graph" class="navlink">Graph</a>
-                    <a href="/people" class="navlink">People</a>
-                    <a href="/organizations" class="navlink">Organizations</a>
-                    <a href="/words" class="navlink">Word Cloud</a>
-                    <a href="/bias" class="navlink">Bias Dashboard</a>
-                </div>
-                <a href="#" class="hamburger">&#9776;</a>      
-            </div>
-        </nav>
+    .iframe-tile a {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
 
-        <div class="spacer1">
-            <h1> Mini Challange 1: </h1> 
-            <div class="fade">
-               Text Analysis
-            </div>      
-        </div>
+    .label {
+      text-align: center;
+      font-size: 28px;
+      padding: 12px 0;
+      color: #F55D33;
+      font-weight: bold;
+      background-color: #fff;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-        <section class="section1"> </section>
-        
-        <div class="spacer2">
-            <div class="text" >
-               
-            </div>
-        </div>
+    @media (max-width: 1100px) {
+      .iframe-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
 
-        <section class="section2"> </section>
+  <div class="spacer1">
+    <h1>Mini Challenge 1: Text Analysis</h1>
+  </div>
 
-      
+  <section class="dashboard-section">
+    <div class="iframe-grid">
+      <div class="iframe-tile">
+        <a href="/llm" target="_blank">
+          <div class="label">LLM</div>
+          <iframe src="/llm?embed=true" title="LLM Preview"></iframe>
+        </a>
+      </div>
+      <div class="iframe-tile">
+        <a href="/timeline" target="_blank">
+          <div class="label">Timeline</div>
+          <div style="height: 250px; overflow-y: scroll;">
+            <iframe src="/timeline?embed=true" title="Timeline Preview" style="height: 500px;"></iframe>
+          </div>
+        </a>
+      </div>      
+      <div class="iframe-tile">
+        <a href="/graph" target="_blank">
+          <div class="label">Graph</div>
+          <iframe src="/graph?embed=true" title="Graph Preview"></iframe>
+        </a>
+      </div>
+      <div class="iframe-tile">
+        <a href="/words" target="_blank">
+          <div class="label">Word Cloud</div>
+          <iframe src="/words?embed=true" title="Word Cloud Preview"></iframe>
+        </a>
+      </div>
+      <div class="iframe-tile">
+        <a href="/people" target="_blank">
+          <div class="label">People</div>
+          <iframe src="/people?embed=true" title="People Preview"></iframe>
+        </a>
+      </div>
+      <div class="iframe-tile">
+        <a href="/organizations" target="_blank">
+          <div class="label">Organizations</div>
+          <iframe src="/organizations?embed=true" title="Organizations Preview"></iframe>
+        </a>
+      </div>
+      <div class="iframe-tile">
+        <a href="/bias" target="_blank">
+          <div class="label">Bias Dashboard</div>
+          <iframe src="/bias?embed=true" title="Bias Dashboard Preview"></iframe>
+        </a>
+      </div>
+    </div>
+  </section>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            setTimeout(function() {
-                $('.fade').fadeTo(400, 1);
-                $('.text').fadeTo(300, 1);
-                $('.review').fadeTo(300, 1);
-            }, 300);
-         
-        });
-    </script>
-        <script>
-           document.addEventListener('DOMContentLoaded', function () {
-            const hamburger = document.querySelector('.hamburger');
-            const navLinks = document.querySelector('.navlinks');
-
-            hamburger.addEventListener('click', function () {
-                navLinks.classList.toggle('show');
-            });
-            })
-
-          
-         </script>
-
-    </body>
+</body>
 </html>
