@@ -1,57 +1,56 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width", initial-scale="1">    
-        <title> People and Orgs </title>
-        <link rel="stylesheet" href="static/css/mystyles.css" />
- 
-    </head>
-    <body>
-        <nav>
-            <div class="bar">
-                <a href="/">
-                    <p> Dashboard Home</p>
-                </a>
-                <div class="navlinks">
-                    <a href="/llm" class="navlink">LLM</a>
-                    <a href="/timeline" class="navlink">Timeline</a>
-                    <a href="/graph" class="navlink">Graph</a>
-                    <a href="/people" class="navlink">People/Orgs</a>
-                    <a href="/organizations" class="navlink">Organizations</a>
-                    <a href="/words" class="navlink">Word Cloud</a>
-                </div>
-                <a href="#" class="hamburger">&#9776;</a>      
-            </div>
-        </nav>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>People and Orgs</title>
+    <link rel="stylesheet" href="static/css/mystyles.css" />
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="static/people.js" defer></script>
+  </head>
 
-        <main style="margin-top: 100px; text-align: center;">
-            <h1> Relationships </h1>
-            
+  <body>
+    <nav>
+      <div class="bar">
+        <a href="/"><p>Dashboard Home</p></a>
+        <div class="navlinks">
+          <a href="/llm" class="navlink">LLM</a>
+          <a href="/timeline" class="navlink">Timeline</a>
+          <a href="/graph" class="navlink">Graph</a>
+          <a href="/people" class="navlink">People/Orgs</a>
+          <a href="/organizations" class="navlink">Organizations</a>
+          <a href="/words" class="navlink">Word Cloud</a>
+        </div>
+        <a href="#" class="hamburger">&#9776;</a>
+      </div>
+    </nav>
+
+    <main style="margin-top: 100px;">
+      <h1 style="text-align: center;">Relationships</h1>
+      <div
+        id="filter-container"
+        style="display: flex; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;"
+      ></div>
+      <div id="graph-container" style="width: 100vw; height: 100vh;"></div>
+    </main>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function() {
-            setTimeout(function() {
-                $('.fade').fadeTo(400, 1);
-                $('.text').fadeTo(300, 1);
-                $('.review').fadeTo(300, 1);
-            }, 300);
-         
+      $(document).ready(function () {
+        setTimeout(function () {
+          $('.fade').fadeTo(400, 1);
+          $('.text').fadeTo(300, 1);
+          $('.review').fadeTo(300, 1);
+        }, 300);
+      });
+
+      document.addEventListener('DOMContentLoaded', function () {
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.navlinks');
+        hamburger.addEventListener('click', function () {
+          navLinks.classList.toggle('show');
         });
+      });
     </script>
-        <script>
-           document.addEventListener('DOMContentLoaded', function () {
-            const hamburger = document.querySelector('.hamburger');
-            const navLinks = document.querySelector('.navlinks');
-
-            hamburger.addEventListener('click', function () {
-                navLinks.classList.toggle('show');
-            });
-            })
-
-          
-         </script>
-    <script src="static/people.js"></script>
-    </body>
+  </body>
 </html>
