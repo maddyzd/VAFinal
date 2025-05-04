@@ -15,21 +15,18 @@ const bios = {
     "Officer Emilio Haber": "Abila police officer. Describes POK as vandals who are quickly arrested.",
     "Tomas Sarto": "Minister of Interior under Pres. Araullo. Supported foreign investment.",
     "President Luis Araullo": "Former president. Lost to Kapelou. Promoted foreign investment incentives."
-  };
+};
 
-  const orgNodes = [
-    "Protectors of Kronos (POK)",
-    "GAStech International",
-    "Kronos Government",
-    "Abila Police",
-    "Tethyn Federal Law Enforcement",
-    "Tethyn Ministry of Foreign Affairs",
-    "Abila Fire Department",
-  ];
-  
-  const arrowMarker = `<marker id="arrow" viewBox="0 -5 10 10" refX="15" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L10,0L0,5" fill="#aaa"/></marker>`;
-  d3.select("svg defs").remove();
-  d3.select("svg").append("defs").html(arrowMarker);
+const orgNodes = [
+  "Protectors of Kronos (POK)",
+  "GAStech International",
+  "Kronos Government",
+  "Abila Police",
+  "Tethyn Federal Law Enforcement",
+  "Tethyn Ministry of Foreign Affairs",
+  "Abila Fire Department",
+];
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const width = window.innerWidth;
@@ -86,7 +83,6 @@ document.addEventListener("DOMContentLoaded", () => {
     label.append("span").text(group);
   });
 
-  // Add GAStech team color key
   const teamLegend = checkboxContainer.append("div")
     .style("margin-left", "40px")
     .style("display", "inline-block");
@@ -153,18 +149,17 @@ document.addEventListener("DOMContentLoaded", () => {
       } : null)
       .filter(Boolean);
 
-      const simulation = d3.forceSimulation(filteredNodes)
-      .force("link", d3.forceLink(filteredLinks).id(d => d.id).distance(250))
-      .force("charge", d3.forceManyBody().strength(-1200))
-      .force("collision", d3.forceCollide(d => orgNodes.includes(d.id) ? 90 : 70))
-      .force("x", d3.forceX(d => (clusterCenters[d.group] || width / 2) + (Math.random() * 80 - 40)).strength(0.7))
-      .force("y", d3.forceY(d => d.level * 140).strength(2.0))
-      .alphaDecay(0.03);
-    
+    const simulation = d3.forceSimulation(filteredNodes)
+      .force("link", d3.forceLink(filteredLinks).id(d => d.id).distance(140))
+      .force("charge", d3.forceManyBody().strength(-500))
+      .force("collision", d3.forceCollide(50))
+      .force("x", d3.forceX(d => clusterCenters[d.group] || width / 2).strength(0.3))
+      .force("y", d3.forceY(height / 2).strength(0.3))
+      .alphaDecay(0.07);
+
     const link = svg.append("g")
       .attr("stroke", "#aaa")
       .attr("stroke-width", 1.2)
-      .attr("marker-end", "url(#arrow)")
       .selectAll("line")
       .data(filteredLinks)
       .enter()
@@ -206,47 +201,50 @@ document.addEventListener("DOMContentLoaded", () => {
       .attr("stroke", d => d.group === "GAStech" ? teamColor(d.team || "Executive") : "none")
       .attr("stroke-width", d => d.group === "GAStech" ? 4 : 0)
       .on("mouseover", function (event, d) {
-        const tooltipHeight = 300;
-        const pageY = event.clientY;
-        const topPos = Math.min(window.innerHeight - tooltipHeight - 10, event.clientY);
-
-        tooltip
-          .style("display", "block")
-          .style("left", `${event.clientX + 15}px`)
-          .style("top", `${topPos}px`)
-          .html(() => {
-            let html = `<strong>${d.id}</strong>`;
-            if (d.group === "GAStech" && !orgNodes.includes(d.id)) {
-              html += `<br/>Team: ${d.team || "Unknown"}`;
-            }
-            if (bios[d.id]) {
-              html += `<br/>${bios[d.id]}`;
-            }
-            return html;
-          });
-          
-
-        if (d.group === "GAStech") {
+        const mouseX = event.clientX;
+        const mouseY = event.clientY;
+      
+        tooltip.style("display", "block")
+               .style("left", `${mouseX + 15}px`)
+               .style("top", `${Math.min(mouseY, 20)}px`)  // Set near top
+               .style("max-height", "none")
+               .style("overflow-y", "auto")
+               .html(`<strong>${d.id}</strong>${bios[d.id] ? `<br/>${bios[d.id]}` : ""}`);
+      
+        if (d.group === "GAStech" && !orgNodes.includes(d.id)) {
           fetchResumeText(d.id).then(text => {
             if (text) {
-              tooltip.html(`<strong>${d.id}</strong><br/>Team: ${d.team || "Unknown"}<br/>${text}`);
+              tooltip.html(`<strong>${d.id}</strong>${bios[d.id] ? `<br/>${bios[d.id]}` : ""}<br/><br/><strong>Resume:</strong><br/><div style='max-height: 400px; overflow-y: auto;'>${text}</div>`);
+            } else {
+              svg.append("text")
+                .attr("class", "temp-label")
+                .attr("x", d.x + 15)
+                .attr("y", d.y - 15)
+                .attr("font-size", 12)
+                .attr("fill", "black")
+                .text(d.id);
             }
-          }).catch(() => {
-            tooltip.html(`<strong>${d.id}</strong><br/>Team: ${d.team || "Unknown"}`);
           });
+        } else {
+          svg.append("text")
+            .attr("class", "temp-label")
+            .attr("x", d.x + 15)
+            .attr("y", d.y - 15)
+            .attr("font-size", 12)
+            .attr("fill", "black")
+            .text(d.id);
         }
       })
+      
       .on("mousemove", function (event) {
-        const tooltipHeight = 300;
-        const pageY = event.clientY;
-        const topPos = (pageY + tooltipHeight > window.innerHeight)
-          ? pageY - tooltipHeight - 10
-          : pageY;
-
-        tooltip.style("left", `${event.clientX + 15}px`).style("top", `${topPos}px`);
+        const mouseX = event.clientX;
+        const mouseY = event.clientY;
+        tooltip.style("left", `${mouseX + 15}px`).style("top", `${Math.min(mouseY, 20)}px`);
       })
-      .on("mouseout", () => {
+      
+      .on("mouseout", function () {
         tooltip.style("display", "none").html("");
+        svg.selectAll(".temp-label").remove();
       })
       .call(drag(simulation));
 
@@ -259,8 +257,6 @@ document.addEventListener("DOMContentLoaded", () => {
       .attr("font-size", 13)
       .attr("dx", 18)
       .attr("dy", 5);
-    
-    
 
     simulation.on("tick", () => {
       filteredNodes.forEach(d => {
