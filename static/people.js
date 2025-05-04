@@ -216,7 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
           .style("top", `${topPos}px`)
           .html(() => {
             let html = `<strong>${d.id}</strong>`;
-            if (d.group === "GAStech") {
+            if (d.group === "GAStech" && !orgNodes.includes(d.id)) {
               html += `<br/>Team: ${d.team || "Unknown"}`;
             }
             if (bios[d.id]) {
