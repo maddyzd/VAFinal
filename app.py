@@ -179,7 +179,7 @@ def llm_query():
     return jsonify(answer)
 
 nodes = [
-    # Organizations
+    #Organizations
     {"id": "Protectors of Kronos (POK)", "group": "POK"},
     {"id": "GAStech International", "group": "GAStech"},
     {"id": "Kronos Government", "group": "Government"},
@@ -187,8 +187,6 @@ nodes = [
     {"id": "Tethyn Federal Law Enforcement", "group": "Government"},
     {"id": "Tethyn Ministry of Foreign Affairs", "group": "Government"},
     {"id": "Abila Fire Department", "group": "Government"},
-    {"id": "The Abila Post", "group": "Media"},
-    {"id": "Homeland Illumination", "group": "Media"},
 
     # POK people
     {"id": "Juliana Vann", "group": "POK"},
@@ -215,8 +213,8 @@ nodes = [
     {"id": "Jon L.", "group": "Citizen"},
 
     # GAStech executives
-    {"id": "Sten Sanjorge Jr.", "group": "GAStech"},
-    {"id": "Sten Sanjorge Sr.", "group": "GAStech"},
+    {"id": "Sten Sanjorge Jr", "group": "GAStech"},
+    {"id": "Sten Sanjorge Sr", "group": "GAStech"},
     {"id": "Ingrid Barranco", "group": "GAStech"},
     {"id": "Ada Campo-Corrente", "group": "GAStech"},
     {"id": "Orhan Strum", "group": "GAStech"},
@@ -275,7 +273,7 @@ nodes = [
 
 links = [
     # Family relationships
-    {"source": "Edvard Vann", "target": "Juliana Vann", "relation": "Father"},
+    {"source": "Edvard Vann", "target": "Juliana Vann", "relation": "Family name match"},
     {"source": "Isia Vann", "target": "Edvard Vann", "relation": "Same family name"},
     {"source": "Isia Vann", "target": "Juliana Vann", "relation": "Same family name"},
     {"source": "Henk Bodrogi", "target": "Loreto Bodrogi", "relation": "Same family name"},
@@ -290,18 +288,39 @@ links = [
     {"source": "Nils Calixto", "target": "Lucas Alcazar", "relation": "Same last name grouping"},
 
     # Leadership transitions
-    {"source": "Henk Bodrogi", "target": "Elian Karel", "relation": "Leadership transfer"},
-    {"source": "Elian Karel", "target": "Silvia Marek", "relation": "Leadership succession"},
+    {"source": "Henk Bodrogi", "target": "Elian Karel", "relation": "Succeeded by"},
+    {"source": "Elian Karel", "target": "Silvia Marek", "relation": "Succeeded by"},
 
-    # POK group relations
-    {"source": "Protectors of Kronos (POK)", "target": "GAStech International", "relation": "Protests against"},
-    {"source": "Protectors of Kronos (POK)", "target": "Kronos Government", "relation": "Declared public threat"},
+    # Parent-child
+    {"source": "Jeroen Karel", "target": "Elian Karel", "relation": "Father"},
+    
+    # Political family relationships
+    {"source": "President Dorel Kapelou II", "target": "Vincent Kapelou", "relation": "Uncle"},
+    {"source": "Vincent Kapelou", "target": "Cesare Nespola", "relation": "Successor"},
+    
+    # Public conflicts / tension
     {"source": "Protectors of Kronos (POK)", "target": "President Dorel Kapelou II", "relation": "Opposes"},
     {"source": "Protectors of Kronos (POK)", "target": "Vincent Kapelou", "relation": "Threatened"},
+    {"source": "President Dorel Kapelou II", "target": "Protectors of Kronos (POK)", "relation": "Declared terrorist"},
+    {"source": "Rufus Drymiau", "target": "Protectors of Kronos (POK)", "relation": "Declared terrorist"},
+    {"source": "Adrien Carman", "target": "Protectors of Kronos (POK)", "relation": "Condemned protest violence"},
+    {"source": "Officer Emilio Haber", "target": "Protectors of Kronos (POK)", "relation": "Police confrontation"},
+    {"source": "Cesare Nespola", "target": "Henk Bodrogi", "relation": "Met regarding water contamination"},
+    
+    # Memorial and martyr status
+    {"source": "Juliana Vann", "target": "Protectors of Kronos (POK)", "relation": "Martyr figure"},
+    {"source": "Elian Karel", "target": "Protectors of Kronos (POK)", "relation": "Martyr figure"},
+
+    # Government collaboration with GAStech
+    {"source": "President Dorel Kapelou II", "target": "Sten Sanjorge Jr", "relation": "Attended events with"},
+    {"source": "President Dorel Kapelou II", "target": "GAStech International", "relation": "Kleptocracy ties"},
+
+    # Ministerial action
+    {"source": "Cesare Nespola", "target": "Dr. Ronald Gerald", "relation": "Licensed oncologist"},
 
     # Media coverage
-    {"source": "Haneson Ngohebo", "target": "Sten Sanjorge Jr.", "relation": "Reported on"},
-    {"source": "Sara Tuno", "target": "Sten Sanjorge Jr.", "relation": "Reported on"},
+    {"source": "Haneson Ngohebo", "target": "Sten Sanjorge Jr", "relation": "Reported on"},
+    {"source": "Sara Tuno", "target": "Sten Sanjorge Jr", "relation": "Reported on"},
     {"source": "Haneson Ngohebo", "target": "Edvard Vann", "relation": "Reported on"},
     {"source": "Haneson Ngohebo", "target": "President Dorel Kapelou II", "relation": "Reported on"},
 
@@ -320,12 +339,32 @@ links = [
     {"source": "Jon L.", "target": "GAStech International", "relation": "Critical of"},
 
     # GAStech internal
-    {"source": "Sten Sanjorge Jr.", "target": "Sten Sanjorge Sr.", "relation": "Son of"},
+    {"source": "Sten Sanjorge Jr", "target": "Sten Sanjorge Sr", "relation": "Son of"},
     {"source": "Ingrid Barranco", "target": "GAStech International", "relation": "CFO"},
     {"source": "Ada Campo-Corrente", "target": "GAStech International", "relation": "CIO"},
     {"source": "Orhan Strum", "target": "GAStech International", "relation": "COO"},
     {"source": "Willem Vasco-Pais", "target": "GAStech International", "relation": "Environmental Officer"},
 ]
+
+
+@app.route('/people_data')
+def people_data():
+    return jsonify({"nodes": nodes, "links": links})
+
+
+@app.route('/resume_text/<name>')
+def resume_text(name):
+    filename = f"Resume-{name}.txt"
+    print(filename)
+    path = os.path.join("sources", "resumetxt", filename)
+    if os.path.exists(path):
+        with open(path, 'r', encoding='utf-8', errors='ignore') as f:
+            return jsonify({"text": f.read()})
+    return jsonify({"text": ""})
+
+
+
+
 # --- Start the App ---
 
 if __name__ == '__main__':
