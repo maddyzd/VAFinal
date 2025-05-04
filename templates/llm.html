@@ -1,75 +1,74 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width", initial-scale="1">    
-        <title> llm </title>
-        <link rel="stylesheet" href="static/css/mystyles.css" />
-        <link rel="stylesheet" href="static/css/llm.css" />
-        <script src="https://d3js.org/d3.v7.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    </head>
-    <body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LLM</title>
+  <link rel="stylesheet" href="static/css/mystyles.css" />
+  <link rel="stylesheet" href="static/css/llm.css" />
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    if (!params.has('embed')) {
+      document.write(`
         <nav>
-            <div class="bar">
-                <a href="/">
-                    <p> Dashboard Home</p>
-                </a>
-                <div class="navlinks">
-                    <a href="/llm" class="navlink">LLM</a>
-                    <a href="/timeline" class="navlink">Timeline</a>
-                    <a href="/graph" class="navlink">Graph</a>
-                    <a href="/people" class="navlink">People/Orgs</a>
-                    <a href="/organizations" class="navlink">Organizations</a>
-                    <a href="/words" class="navlink">Word Cloud</a>
-                    <a href="/bias" class="navlink">Bias Dashboard</a>
-                  </div>
-                <a href="#" class="hamburger">&#9776;</a>      
+          <div class="bar">
+            <a href="/"><p> Dashboard Home</p></a>
+            <div class="navlinks">
+              <a href="/llm" class="navlink">LLM</a>
+              <a href="/timeline" class="navlink">Timeline</a>
+              <a href="/graph" class="navlink">Graph</a>
+              <a href="/people" class="navlink">People</a>
+              <a href="/organizations" class="navlink">Organizations</a>
+              <a href="/words" class="navlink">Word Cloud</a>
+              <a href="/bias" class="navlink">Bias Dashboard</a>
             </div>
+            <a href="#" class="hamburger">&#9776;</a>
+          </div>
         </nav>
-        <main style="margin-top: 100px; text-align: center;">
-            <h1>Please enter your query</h1>
-            <div id="chat-container">
-                <div id="chat-history"></div>
-                <form id="chat-form">
-                    <div class="llm-input">
-                        <input type="text" id="llm_query" placeholder="Insert query here" autocomplete="off" />
-                        <input id="submit_llm_query" type="button" value="Submit">
-                    </div>
-                    <div class="llm-source-checkboxes">
-                        {% for folder in folders %}
-                        <label><input type="checkbox" name="folder" value="{{ folder }}"> {{ folder }}</label>
-                        {% endfor %}
-                    </div>
+      `);
+    }
+  </script>
 
-                </form>
-            </div>
-            
-        </main>
+  <main style="margin-top: 100px; text-align: center;">
+    <h1>Please enter your query</h1>
+    <div id="chat-container">
+      <div id="chat-history"></div>
+      <form id="chat-form">
+        <div class="llm-input">
+          <input type="text" id="llm_query" placeholder="Insert query here" autocomplete="off" />
+          <input id="submit_llm_query" type="button" value="Submit">
+        </div>
+        <div class="llm-source-checkboxes">
+          {% for folder in folders %}
+          <label><input type="checkbox" name="folder" value="{{ folder }}"> {{ folder }}</label>
+          {% endfor %}
+        </div>
+      </form>
+    </div>
+  </main>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            setTimeout(function() {
-                $('.fade').fadeTo(400, 1);
-                $('.text').fadeTo(300, 1);
-                $('.review').fadeTo(300, 1);
-            }, 300);
-         
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      setTimeout(function () {
+        $('.fade').fadeTo(400, 1);
+        $('.text').fadeTo(300, 1);
+        $('.review').fadeTo(300, 1);
+      }, 300);
+
+      const hamburger = document.querySelector('.hamburger');
+      const navLinks = document.querySelector('.navlinks');
+      if (hamburger && navLinks) {
+        hamburger.addEventListener('click', function () {
+          navLinks.classList.toggle('show');
         });
-    </script>
-        <script>
-           document.addEventListener('DOMContentLoaded', function () {
-            const hamburger = document.querySelector('.hamburger');
-            const navLinks = document.querySelector('.navlinks');
-
-            hamburger.addEventListener('click', function () {
-                navLinks.classList.toggle('show');
-            });
-            })
-
-          
-         </script>
-         <script src="static/llm.js"></script>
-    </body>
+      }
+    });
+  </script>
+  <script src="static/llm.js"></script>
+</body>
 </html>

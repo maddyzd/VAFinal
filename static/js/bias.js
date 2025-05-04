@@ -104,6 +104,29 @@ function createSentimentChart(data) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      plugins: {
+        tooltip: {
+          enabled: true,
+          callbacks: {
+            label: function (context) {
+              const label = context.dataset.label || '';
+              const value = context.parsed.y;
+              return `${label}: ${value !== null ? value.toFixed(3) : 'No data'}`;
+            }
+          }
+        },
+        legend: {
+          position: 'top'
+        }
+      },
+      hover: {
+        mode: 'index',
+        intersect: false
+      },
       scales: {
         y: {
           min: -1,
@@ -114,7 +137,7 @@ function createSentimentChart(data) {
           }
         }
       }
-    }
+    }    
   });
 }
 
@@ -161,17 +184,40 @@ function createGroupComparisonChart(sources) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      plugins: {
+        tooltip: {
+          enabled: true,
+          callbacks: {
+            label: function (context) {
+              const label = context.dataset.label || '';
+              const value = context.parsed.y;
+              return `${label}: ${value !== null ? value.toFixed(3) : 'No data'}`;
+            }
+          }
+        },
+        legend: {
+          position: 'top'
+        }
+      },
+      hover: {
+        mode: 'index',
+        intersect: false
+      },
       scales: {
         y: {
           min: -1,
           max: 1,
           title: {
             display: true,
-            text: "Average Sentiment Score (-1 to 1)"
+            text: "Sentiment Score (-1 to 1)"
           }
         }
       }
-    }
+    }    
   });
 }
 

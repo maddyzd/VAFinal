@@ -9,6 +9,10 @@
     <script src="static/people.js" defer></script>
   </head>
     <body>
+        <script>
+    const params = new URLSearchParams(window.location.search);
+    if (!params.has('embed')) {
+      document.write(`
         <nav>
             <div class="bar">
                 <a href="/">
@@ -24,36 +28,38 @@
                     <a href="/bias" class="navlink">Bias Dashboard</a>
                   </div>
                 <a href="#" class="hamburger">&#9776;</a>      
-            </div>
+          </div>
         </nav>
+      `);
+    }
+  </script>
 
+<main style="margin-top: 100px;">
+    <h1 style="text-align: center;">Relationships</h1>
+    <div
+      id="filter-container"
+      style="display: flex; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;"
+    ></div>
+    <div id="graph-container" style="width: 100vw; height: 100vh;"></div>
+  </main>
 
-    <main style="margin-top: 100px;">
-      <h1 style="text-align: center;">Relationships</h1>
-      <div
-        id="filter-container"
-        style="display: flex; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;"
-      ></div>
-      <div id="graph-container" style="width: 100vw; height: 100vh;"></div>
-    </main>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      setTimeout(function () {
+        $('.fade').fadeTo(400, 1);
+        $('.text').fadeTo(300, 1);
+        $('.review').fadeTo(300, 1);
+      }, 300);
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-      $(document).ready(function () {
-        setTimeout(function () {
-          $('.fade').fadeTo(400, 1);
-          $('.text').fadeTo(300, 1);
-          $('.review').fadeTo(300, 1);
-        }, 300);
-      });
-
-      document.addEventListener('DOMContentLoaded', function () {
-        const hamburger = document.querySelector('.hamburger');
-        const navLinks = document.querySelector('.navlinks');
+      const hamburger = document.querySelector('.hamburger');
+      const navLinks = document.querySelector('.navlinks');
+      if (hamburger && navLinks) {
         hamburger.addEventListener('click', function () {
           navLinks.classList.toggle('show');
         });
-      });
-    </script>
-  </body>
+      }
+    });
+  </script>
+</body>
 </html>
