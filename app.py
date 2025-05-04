@@ -356,7 +356,7 @@ def people_data():
 def resume_text(name):
     filename = f"Resume-{name}.txt"
     print(filename)
-    path = os.path.join("sources", "resumetxt", filename)
+    path = os.path.join("sources", "Resumes", filename)
     if os.path.exists(path):
         with open(path, 'r', encoding='utf-8', errors='ignore') as f:
             return jsonify({"text": f.read()})
