@@ -239,11 +239,6 @@ function updateAllCheckboxes(checked) {
     })
 }
 
-// TODO: Border color the same as dot color
-// TODO: Bold & center title, italicize source, list date, by author, 
-
-
-
 function addArticleViewer(d) {
     const container = document.getElementById("article-viewer-container");
 

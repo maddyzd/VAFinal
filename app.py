@@ -97,28 +97,6 @@ if len(os.listdir(PATH_TO_PERSISTENT)) == 0:
     document_store.write_documents(docs_with_embeddings["documents"])
     all_docs = document_store.filter_documents()
     print(f"After writing, there are: {len(all_docs)} docs embedded!")
-# embeddings = []
-# texts = []
-# metas = []
-
-# for doc in all_docs:
-#     if doc.embedding is not None:
-#         print(doc.meta)
-#         embeddings.append(doc.embedding)
-#         texts.append(doc.content)
-#         metas.append(doc.meta)
-
-# X = np.array(embeddings)
-# pca = PCA(n_components=2)
-# X_reduced = pca.fit_transform(X)
-
-# Plot
-# plt.figure(figsize=(10, 8))
-# plt.scatter(X_reduced[:, 0], X_reduced[:, 1])
-# for i, meta in enumerate(metas):
-#     plt.annotate(meta["source"], (X_reduced[i, 0], X_reduced[i, 1]))  # show start of text
-# plt.title("PCA of Document Embeddings")
-# plt.show()
 
 def get_source_folders():
     folders = [f for f in os.listdir(SOURCE_DIR) if os.path.isdir(os.path.join(SOURCE_DIR, f))]
@@ -257,7 +235,6 @@ def generate_similarity_report():
     conditions = [{"field": "meta.source", "operator": "==", "value": source} for source in sources]
     print(len(conditions))
     if (len(sources) == 0):
-        print("In here!")
         results = []
         x_axis_title = f"Principal Component 1 ({0:.2f}%)"
         y_axis_title = f"Principal Component 2 ({0:.2f}%)"
