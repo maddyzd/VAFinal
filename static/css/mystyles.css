@@ -140,3 +140,23 @@ font:
         height: 300px;
     }
 }
+
+#mentionTable {
+    border-collapse: collapse;
+}
+  
+#mentionTable th,
+#mentionTable td {
+    border: 1px solid black;
+    padding: 8px;
+}
+
+#mentionTable tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+  
+  
+
+    
+   

@@ -53,3 +53,19 @@ function renderWordCloud(words) {
             .attr("transform", d => `translate(${d.x},${d.y}) rotate(${d.rotate})`);
     }
 }
+
+function autoGenerateWordCloud() {
+    // Select all checkboxes
+    document.querySelectorAll("input[name='folder']").forEach(cb => cb.checked = true);
+    console.log("Call to autoGenerateWordCloud")
+
+    // Set slider to 50
+    const slider = document.getElementById("word-range");
+    slider.value = 50;
+
+    const display = document.getElementById("wordCountDisplay");
+    if (display) display.textContent = "50";
+
+    document.getElementById("sourceForm").dispatchEvent(new Event("submit"));
+}
+

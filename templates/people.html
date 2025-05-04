@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width", initial-scale="1">    
-        <title> people </title>
-        <link rel="stylesheet" href="static/css/mystyles.css" />
- 
-    </head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>People and Orgs</title>
+    <link rel="stylesheet" href="static/css/mystyles.css" />
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="static/people.js" defer></script>
+  </head>
     <body>
+        <script>
+    const params = new URLSearchParams(window.location.search);
+    if (!params.has('embed')) {
+      document.write(`
         <nav>
             <div class="bar">
                 <a href="/">
@@ -16,40 +21,44 @@
                 <div class="navlinks">
                     <a href="/llm" class="navlink">LLM</a>
                     <a href="/timeline" class="navlink">Timeline</a>
-                    <a href="/graph" class="navlink">Graph</a>
-                    <a href="/people" class="navlink">People</a>
+                    <a href="/people" class="navlink">People/Orgs</a>
                     <a href="/similarity_report" class="navlink">Similarity Report</a>
                     <a href="/words" class="navlink">Word Cloud</a>
-                </div>
+                    <a href="/bias" class="navlink">Bias</a>
+                  </div>
                 <a href="#" class="hamburger">&#9776;</a>      
-            </div>
+          </div>
         </nav>
+      `);
+    }
+  </script>
 
+<main style="margin-top: 100px;">
+    <h1 style="text-align: center;">Relationships</h1>
+    <div
+      id="filter-container"
+      style="display: flex; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;"
+    ></div>
+    <div id="graph-container" style="width: 100vw; height: 100vh;"></div>
+  </main>
 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      setTimeout(function () {
+        $('.fade').fadeTo(400, 1);
+        $('.text').fadeTo(300, 1);
+        $('.review').fadeTo(300, 1);
+      }, 300);
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            setTimeout(function() {
-                $('.fade').fadeTo(400, 1);
-                $('.text').fadeTo(300, 1);
-                $('.review').fadeTo(300, 1);
-            }, 300);
-         
+      const hamburger = document.querySelector('.hamburger');
+      const navLinks = document.querySelector('.navlinks');
+      if (hamburger && navLinks) {
+        hamburger.addEventListener('click', function () {
+          navLinks.classList.toggle('show');
         });
-    </script>
-        <script>
-           document.addEventListener('DOMContentLoaded', function () {
-            const hamburger = document.querySelector('.hamburger');
-            const navLinks = document.querySelector('.navlinks');
-
-            hamburger.addEventListener('click', function () {
-                navLinks.classList.toggle('show');
-            });
-            })
-
-          
-         </script>
-
-    </body>
+      }
+    });
+  </script>
+</body>
 </html>

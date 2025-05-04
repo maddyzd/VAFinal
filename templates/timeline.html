@@ -1,125 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Challenge Timeline</title>
-    <link rel="stylesheet" href="static/css/mystyles.css">
-    <script src="https://unpkg.com/vis-timeline@latest/standalone/umd/vis-timeline-graph2d.min.js"></script>
-    <link href="https://unpkg.com/vis-timeline@latest/styles/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
-    <style>
-        #timeline {
-            width: 95%;
-            height: 600px;
-            margin: 120px auto 120px auto;
-            border: 2px solid #F5BD33;
-            background-color: #F8F4E3;
-            border-radius: 10px;
-        }
-        h1 {
-            text-align: center;
-            color: #0f0f0f;
-            margin-top: 140px;
-            font-size: 42px;
-            font-family: 'American Typewriter', serif;
-        }
-        .vis-item.highlight {
-            background-color: #F55D33;
-            border-color: #F55D33;
-            color: white;
-            font-weight: bold;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Challenge Timeline</title>
+  <link rel="stylesheet" href="static/css/mystyles.css" />
+  <script src="https://unpkg.com/vis-timeline@latest/standalone/umd/vis-timeline-graph2d.min.js"></script>
+  <link href="https://unpkg.com/vis-timeline@latest/styles/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
+  <style>
+    #timeline {
+      width: 95%;
+      height: 900px;
+      margin: 140px auto 120px auto;
+    }
+
+    h1, .timeline-description {
+      text-align: center;
+      color: #0f0f0f;
+      font-family: 'American Typewriter', serif;
+    }
+
+    h1 {
+      font-size: 42px;
+      margin-top: 140px;
+    }
+
+    .timeline-description {
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+
+    .vis-item.highlight {
+      background-color: #F55D33;
+      border-color: #F55D33;
+      color: white;
+      font-weight: bold;
+    }
+  </style>
 </head>
 
 <body>
-    <nav>
-        <div class="bar">
-            <a href="/">
-                <p> Dashboard Home</p>
-            </a>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const isEmbed = params.has('embed');
+
+    if (!isEmbed) {
+      document.write(`
+        <nav>
+          <div class="bar">
+            <a href="/"><p> Dashboard Home</p></a>
             <div class="navlinks">
-                <a href="/llm" class="navlink">LLM</a>
-                <a href="/timeline" class="navlink">Timeline</a>
-                <a href="/graph" class="navlink">Graph</a>
-                <a href="/people" class="navlink">People</a>
-                <a href="/similarity_report" class="navlink">Similarity Report</a>
-                <a href="/words" class="navlink">Word Cloud</a>
+              <a href="/llm" class="navlink">LLM</a>
+              <a href="/timeline" class="navlink">Timeline</a>
+              <a href="/people" class="navlink">People/Orgs</a>
+              <a href="/similarity_report" class="navlink">Similarity Report</a>
+              <a href="/words" class="navlink">Word Cloud</a>
+              <a href="/bias" class="navlink">Bias</a>
             </div>
             <a href="#" class="hamburger">&#9776;</a>      
-        </div>
-    </nav>
+          </div>
+        </nav>
+      `);
+    }
+  </script>
 
-    <h1>Challenge Timeline</h1>
-    <div id="timeline"></div>
+  <h1 id="mainHeader">Challenge Timeline</h1>
+  <p class="timeline-description" id="description">
+    Click on an event to view additional details. Zoom in on the timeline to explore the specific timing of each event.
+  </p>
 
+  <div id="timeline"></div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            setTimeout(function() {
-                $('.fade').fadeTo(400, 1);
-                $('.text').fadeTo(300, 1);
-                $('.review').fadeTo(300, 1);
-            }, 300);
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      if (window.location.search.includes('embed')) {
+        $('#mainHeader').hide();
+        $('#description').hide();
+      }
 
-            const hamburger = document.querySelector('.hamburger');
-            const navLinks = document.querySelector('.navlinks');
-
-            hamburger.addEventListener('click', function () {
-                navLinks.classList.toggle('show');
-            });
+      const hamburger = document.querySelector('.hamburger');
+      const navLinks = document.querySelector('.navlinks');
+      if (hamburger && navLinks) {
+        hamburger.addEventListener('click', function () {
+          navLinks.classList.toggle('show');
         });
-    </script>
+      }
+    });
 
-    <script>
-        var container = document.getElementById('timeline');
-        
-        var items = new vis.DataSet([
-            {id: 1, content: 'POK Formed', start: '1997-04-01', title: 'Protectors of Kronos (POK) formed after contamination concerns.'},
-            {id: 2, content: 'Juliana Vann Dies', start: '1998-08-21', className: 'highlight', title: '10-year-old dies from leukemia due to water contamination.'},
-            {id: 3, content: 'Meeting with Minister of Health', start: '1998-11-15', title: 'POK meets Minister Nespola to address water crisis.'},
-            {id: 4, content: 'WFA Test Results Published', start: '1999-05-17', title: 'Wellness for All confirms toxic contamination linked to GAStech.'},
-            {id: 5, content: 'Nespola Proposes Tax Bill', start: '1999-07-01', title: 'Proposed tax to fund cleanup and healthcare.'},
-            {id: 6, content: 'Tax Bill Defeated', start: '2001-03-22', title: 'General Assembly votes down cleanup funding.'},
-            {id: 7, content: 'Minister Nespola Dies', start: '2001-06-01', title: 'Loss of POKs main government supporter.'},
-            {id: 8, content: 'Explosion at Tiskele Bend', start: '2001-08-18', title: 'Explosion at GAStech site triggers protests.'},
-            {id: 9, content: 'Elian Karel Becomes Leader', start: '2001-10-01', title: 'Elian Karel officially leads POK.'},
-            {id: 10, content: 'Elodis Health Report Update', start: '2004-05-29', title: 'Health center update shows worsening illnesses.'},
-            {id: 11, content: 'POK Protest Arrests', start: '2005-04-05', title: '15 POK protesters arrested at GAStech site.'},
-            {id: 12, content: 'Death of Elian Karel', start: '2009-06-19', className: 'highlight', title: 'POK leader dies suspiciously in jail.'},
-            {id: 13, content: 'Marek Rally for Accountability', start: '2012-04-09', title: 'Silvia Marek calls for protest against corruption.'},
-            {id: 14, content: 'Annual Martyrs Rally', start: '2013-06-19', title: 'Protesters rally against government, honor Juliana and Elian.'},
+    const container = document.getElementById('timeline');
+    const items = new vis.DataSet([
+        {id: 1, content: 'POK Formed', start: '1997-04-01', title: 'POK formed after contamination concerns. (Apr 1, 1997)'},
+        {id: 2, content: 'Juliana Vann Dies', start: '1998-08-21', className: 'highlight', title: '10-year-old dies of leukemia caused by water contamination. (Aug 21, 1998)'},
+        {id: 3, content: 'Meeting with Minister', start: '1998-11-15', title: 'POK meets Minister Nespola about health concerns. (Nov 15, 1998)'},
+        {id: 4, content: 'WFA Confirms Contamination', start: '1999-05-17', title: 'Wellness for All confirms toxic contamination. (May 17, 1999)'},
+        {id: 5, content: 'Tax Bill Proposed', start: '1999-07-01', title: 'Nespola proposes gas company tax. (Jul 1, 1999)'},
+        {id: 6, content: 'Tax Bill Defeated', start: '2001-03-22', title: 'General Assembly rejects tax. (Mar 22, 2001)'},
+        {id: 7, content: 'Minister Nespola Dies', start: '2001-06-01', title: 'POK\'s government ally dies unexpectedly. (Jun 1, 2001)'},
+        {id: 8, content: 'Explosion at GAStech', start: '2001-08-18', title: 'Explosion triggers new protests. (Aug 18, 2001)'},
+        {id: 9, content: 'Elian Karel Becomes Leader', start: '2001-10-01', title: 'Leadership passed to Elian Karel. (Oct 1, 2001)'},
+        {id: 10, content: 'Elodis Health Update', start: '2004-05-29', title: 'New public health data shows worse contamination. (May 29, 2004)'},
+        {id: 11, content: 'POK Protesters Arrested', start: '2005-04-05', title: '15 arrested at GAStech protest. (Apr 5, 2005)'},
+        {id: 12, content: 'Death of Elian Karel', start: '2009-06-19', className: 'highlight', title: 'POK leader dies under suspicious circumstances. (Jun 19, 2009)'},
+        {id: 13, content: 'Marek Rally', start: '2012-04-09', title: 'Marek calls for protest against government corruption. (Apr 9, 2012)'},
+        {id: 14, content: 'Annual Martyrs Rally', start: '2013-06-19', title: 'Public rally honors Juliana Vann and Elian Karel. (Jun 19, 2013)'},
+        {id: 100, content: 'GAStech Meeting Scheduled', start: '2014-01-20T08:00:00', title: 'Meeting scheduled at GAStech HQ. (Jan 20, 2014)'},
+        {id: 101, content: 'Fire Alarm', start: '2014-01-20T10:15:00', title: 'Fire alarm triggers evacuation. (Jan 20, 2014)'},
+        {id: 102, content: 'Police Arrive', start: '2014-01-20T12:20:00', title: 'Police set up perimeter. (Jan 20, 2014)'},
+        {id: 103, content: 'Kidnapping Reports', start: '2014-01-20T17:30:00', className: 'highlight', title: 'GAStech employees reported kidnapped. (Jan 20, 2014)'},
+        {id: 104, content: 'Police Press Statement', start: '2014-01-20T19:30:00', title: 'Police confirm missing persons. (Jan 20, 2014)'},
+        {id: 105, content: 'POK Claims Responsibility', start: '2014-01-20T23:53:00', className: 'highlight', title: 'POK demands $20 million ransom. (Jan 20, 2014)'},
+        {id: 106, content: 'Missing Confirmed', start: '2014-01-21T09:11:00', title: 'Police confirm 10 missing employees. (Jan 21, 2014)'},
+        {id: 107, content: 'POK Statement Released', start: '2014-01-21T12:00:00', title: 'POK releases public statement. (Jan 21, 2014)'}
+    ]);
 
-            {id: 100, content: 'GAStech Meeting Scheduled', start: '2014-01-20T08:00:00', title: 'GAStech headquarters meeting scheduled.'},
-            {id: 101, content: 'Fire Alarm at GAStech', start: '2014-01-20T10:15:00', title: 'Building evacuated after alarm.'},
-            {id: 102, content: 'Police Arrive', start: '2014-01-20T12:20:00', title: 'Police begin perimeter setup.'},
-            {id: 103, content: 'Reports of Kidnapping', start: '2014-01-20T17:30:00', className: 'highlight', title: 'Initial reports suggest employees kidnapped.'},
-            {id: 104, content: 'Police Press Statement', start: '2014-01-20T19:30:00', title: 'Abila Police brief the public.'},
-            {id: 105, content: 'POK Claims Responsibility', start: '2014-01-20T23:53:00', className: 'highlight', title: 'POK claims kidnapping and demands $20M ransom.'},
-            {id: 106, content: 'Day Two: 10 Missing Confirmed', start: '2014-01-21T09:11:00', title: 'Police confirm 10 missing employees.'},
-            {id: 107, content: 'POK Statement Released', start: '2014-01-21T12:00:00', title: 'POK publicizes ransom demands.'}
-        ]);
 
-        var options = {
-            orientation: 'top',
-            selectable: true,
-            clickToUse: true,
-            zoomable: true,
-            moveable: true,
-            stack: false,
-            horizontalScroll: true,
-            verticalScroll: false,
-            tooltip: { followMouse: true }
-        };
+    const options = {
+      orientation: 'top',
+      selectable: true,
+      clickToUse: true,
+      zoomable: true,
+      moveable: true,
+      stack: true,
+      horizontalScroll: true,
+      verticalScroll: false,
+      tooltip: { followMouse: true, overflowMethod: 'cap' }
+    };
 
-        var timeline = new vis.Timeline(container, items, options);
-
-        // Auto-focus on the major kidnapping event
-        timeline.on('ready', function () {
-            timeline.focus(103, {animation: {duration: 1000, easingFunction: 'easeInOutQuad'}});
-        });
-    </script>
-
+    const timeline = new vis.Timeline(container, items, options);
+    timeline.on('ready', function () {
+      timeline.focus(103, { animation: { duration: 1000, easingFunction: 'easeInOutQuad' } });
+    });
+  </script>
 </body>
 </html>
