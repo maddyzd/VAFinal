@@ -57,6 +57,7 @@ function renderWordCloud(words) {
 function autoGenerateWordCloud() {
     // Select all checkboxes
     document.querySelectorAll("input[name='folder']").forEach(cb => cb.checked = true);
+    console.log("Call to autoGenerateWordCloud")
 
     // Set slider to 50
     const slider = document.getElementById("word-range");
@@ -65,6 +66,23 @@ function autoGenerateWordCloud() {
     const display = document.getElementById("wordCountDisplay");
     if (display) display.textContent = "50";
 
-    document.getElementById("sourceForm").dispatchEvent(new Event("submit"));
+    const folders = Array.from(document.querySelectorAll("input[name='folder']:checked"))
+                         .map(cb => cb.value);
+    const words = d3.select("#word-range").property("value")
+    console.log(words)
+
+    fetch("/wordcloud", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ folders: folders, words: words })
+    })
+    .then(async function(response){
+        return JSON.parse(JSON.stringify((await response.json())));
+     })
+    .then(data => renderWordCloud(data));
+    // document.getElementById("sourceForm").dispatchEvent(new Event("submit"));
 }
 
+window.addEventListener("DOMContentLoaded", () => {
+    autoGenerateWordCloud()
+});

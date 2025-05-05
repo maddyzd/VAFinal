@@ -6,8 +6,14 @@ import csv
 from pathlib import Path
 from haystack.components.builders.prompt_builder import PromptBuilder
 from haystack_integrations.components.generators.google_ai import GoogleAIGeminiGenerator
-from haystack import Pipeline
+from haystack_integrations.document_stores.chroma import ChromaDocumentStore
+from haystack.components.embedders import SentenceTransformersDocumentEmbedder, SentenceTransformersTextEmbedder
+from haystack_integrations.components.retrievers.chroma import ChromaEmbeddingRetriever
+from haystack import Document, Pipeline
 from dotenv import load_dotenv
+import numpy as np
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
 
 load_dotenv()
 
@@ -16,6 +22,9 @@ load_dotenv()
 app = Flask(__name__, static_folder='static', template_folder='templates')
 
 SOURCE_DIR = 'sources'
+NEWS_SOURCES_DIR = Path('News Articles')
+PATH_TO_PERSISTENT = Path('vectors/')
+NEWS_SOURCES = sorted(os.listdir(NEWS_SOURCES_DIR))
 RAG_gen_template = """
 Given the following contexts, answer the question to the best of your ability.
 Context: 
@@ -25,6 +34,7 @@ Context:
 Question: {{ query }}
 """
 
+# Creates the answer pipeline
 answer_prompt_builder = PromptBuilder(template=RAG_gen_template, required_variables={"all_context", "query"})
 answer_generator = GoogleAIGeminiGenerator(model="gemini-2.0-flash-lite")
 
@@ -33,9 +43,60 @@ answer_pipeline = Pipeline()
 
 answer_pipeline.add_component("answer_builder", answer_prompt_builder) 
 answer_pipeline.add_component("llm_answer_generator", answer_generator) 
-
+print("Established llm answer pipeline")
 answer_pipeline.connect("answer_builder", "llm_answer_generator")
 
+print("Initializing ChromaDocumentStore")
+document_store = ChromaDocumentStore(persist_path=str(PATH_TO_PERSISTENT))
+
+# If we haven't yet embedded our documents, do so first. This takes about 3 minutes
+if len(os.listdir(PATH_TO_PERSISTENT)) == 0:
+    print("Documents have not yet been embedded! This could take a couple minutes. Embedding documents...")
+
+    ARTICLE_SOURCE_START = "SOURCE:"
+    ARTICLE_TITLE_START = "TITLE:"
+    ARTICLE_PUBLISHED_START = "PUBLISHED:"
+    ARTICLE_LOCATION_START = "LOCATION:"
+    ARTICLE_AUTHOR_START = "AUTHOR:"
+    ARTICLE_METADATA = [ARTICLE_SOURCE_START, ARTICLE_TITLE_START, ARTICLE_PUBLISHED_START, ARTICLE_LOCATION_START, ARTICLE_AUTHOR_START]
+
+    def create_haystack_doc(file_contents) -> Document|None:
+        meta = {}
+        all_end_indices = []
+        for metadata_start_token in ARTICLE_METADATA:
+            try:
+                metadata_start_idx = file_contents.index(metadata_start_token)
+                metadata_end_idx = metadata_start_idx + file_contents[metadata_start_idx:].index('\n')
+                metadata_start_idx += len(metadata_start_token)
+                metadata_content = file_contents[metadata_start_idx:metadata_end_idx].strip()
+                meta[metadata_start_token.lower()[:-1]] = metadata_content
+                all_end_indices.append(metadata_end_idx)
+                # print(f"For metadata_start_token: {metadata_start_token}, content: {metadata_content}")
+            except ValueError:
+                # print(f"No metadata for {metadata_start_token}")
+                meta[metadata_start_token.lower()[:-1]] = ""
+
+        content = file_contents[max(all_end_indices):].strip()
+
+        return Document(content=content,
+                        meta=meta)
+    
+    # we use the default embedder to embed our documents (hugging face model, sentence-transformers/all-mpnet-base-v2)
+    print("Initializing SentenceTransformersDocumentEmbedder")
+    doc_embedder = SentenceTransformersDocumentEmbedder(meta_fields_to_embed=ARTICLE_METADATA)
+    print("Warming it up...")
+    doc_embedder.warm_up()
+    docs_to_embed = []
+    for data_file in NEWS_SOURCES_DIR.glob('*/*.txt'):
+        with open(data_file, 'r', errors='ignore') as f:
+            text = f.read()
+        docs_to_embed.append(create_haystack_doc(text))
+        # embed those documents, and add them to our Chroma DB
+    print(f"About to embed: {len(docs_to_embed)} documents")
+    docs_with_embeddings = doc_embedder.run(docs_to_embed)
+    document_store.write_documents(docs_with_embeddings["documents"])
+    all_docs = document_store.filter_documents()
+    print(f"After writing, there are: {len(all_docs)} docs embedded!")
 
 def get_source_folders():
     folders = [f for f in os.listdir(SOURCE_DIR) if os.path.isdir(os.path.join(SOURCE_DIR, f))]
@@ -104,9 +165,9 @@ def graph():
 def people():
     return render_template('people.html')
 
-@app.route('/organizations')
-def organizations():
-    return render_template('organizations.html')
+@app.route('/similarity_report')
+def similarity_report():
+    return render_template('similarity_report.html', news_sources=NEWS_SOURCES)
 
 @app.route('/llm')
 def llm():
@@ -139,7 +200,6 @@ def get_all_content(path):
             all_contents += get_all_content(sub_path)
     # Otherwise, the path is a file, so read it and add its contents
     else:
-        print(path)
         with open(path, 'r', errors='ignore') as f:
             all_contents = f.read()
     
@@ -154,10 +214,6 @@ def llm_query():
     folder_content = {}
     for folder in selected_folders:
         folder_content[folder] = get_all_content(os.path.join(SOURCE_DIR, folder))
-        print(f"For folder: {folder}, the first 100 chars of content are:")
-        print(folder_content[folder][:100])
-        print("and the last 100 chars of content are:")
-        print(folder_content[folder][-100:])
 
     all_context = ""
     for folder in selected_folders:
@@ -173,10 +229,62 @@ def llm_query():
     )
     answer = str(answer_results['llm_answer_generator']['replies'][0])
     # supporting_titles = '\n'.join([document.meta['title'] for document in retrieval_results['document_retriever']['documents']])
-
-    print(answer)
     
     return jsonify(answer)
+
+
+@app.route('/generate_similarity_report', methods=['POST'])
+def generate_similarity_report():
+    sources = request.json.get('sources', [])
+    conditions = [{"field": "meta.source", "operator": "==", "value": source} for source in sources]
+    print(len(conditions))
+    if (len(sources) == 0):
+        results = []
+        x_axis_title = f"Principal Component 1 ({0:.2f}%)"
+        y_axis_title = f"Principal Component 2 ({0:.2f}%)"
+
+        return jsonify({"data": results,
+                        "x-axis-title": x_axis_title,
+                        "y-axis-title": y_axis_title})
+    filters = {}
+    if len(conditions) == 1:
+        filters = {"field": "meta.source", "operator": "==", "value": sources[0]}
+    elif len(conditions) > 1:
+        filters = {
+            "operator": "OR",
+            "conditions": conditions,
+        }
+    # print(filters)
+    current_docs = document_store.filter_documents(filters)
+    num_docs = len(current_docs)
+    print(f"Retrieved {num_docs} documents")
+    embeddings = []
+    texts = []
+    metas = []
+
+    for doc in current_docs:
+        if doc.embedding is not None:
+            embeddings.append(doc.embedding)
+            texts.append(doc.content)
+            metas.append(doc.meta)
+
+    X = np.array(embeddings)
+    pca = PCA(n_components=2)
+    X_reduced = pca.fit_transform(X)
+
+    results = [{"x": X_reduced[i, 0], 
+                "y": X_reduced[i, 1],
+                "meta": metas[i], 
+                "contents": texts[i]}
+                for i in range(num_docs)]
+
+    x_axis_title = f"Principal Component 1 ({100 * pca.explained_variance_ratio_[0]:.2f}%)"
+    y_axis_title = f"Principal Component 2 ({100 * pca.explained_variance_ratio_[1]:.2f}%)"
+
+    return jsonify({"data": results,
+                    "x-axis-title": x_axis_title,
+                    "y-axis-title": y_axis_title})
+
 
 nodes = [
     #Organizations
