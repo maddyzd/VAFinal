@@ -1,5 +1,7 @@
 const METADATA = ["title", "source", "published", "location", "author"]
 
+const openDots = new Set();
+
         
 d3.select("#generate-similarity-report").on("click", function() {
     generateReport()
@@ -148,7 +150,7 @@ function drawScatterPlot(results) {
         console.log("Mouseover!")
         d3.select(event.currentTarget)
             .transition()
-            .attr("r", 10); // make the dot bigger
+            .attr("r", d => openDots.has(d.meta.title) ? 12 : 10); // make the dot bigger
 
         var class_name = "." + d['meta']['source'].replaceAll(" ", "-")
         var color = d3.select(class_name).attr("fill")
@@ -176,7 +178,7 @@ function drawScatterPlot(results) {
         // when the mouse leaves, reset the dot's size
         d3.select(event.currentTarget)
             .transition()
-            .attr("r", 6); // shrink back to normal size
+            .attr("r", d => openDots.has(d.meta.title) ? 10 : 6); // shrink back to normal size
 
         // hide the tooltip
         tooltip.transition()
@@ -184,9 +186,9 @@ function drawScatterPlot(results) {
             .style("opacity", 0); // set opacity to 0 (invisible)
     }).on("click", (event, d) => {
         console.log("I was clicked!" + d['meta']['title'])
+        d3.select(event.currentTarget).transition().attr("r", 10)
         addArticleViewer(d);
     });
-    
 }
 
 
@@ -244,7 +246,13 @@ function addArticleViewer(d) {
 
     // If there are already 2 viewers, remove the first (oldest)
     if (container.children.length >= 2) {
-        container.removeChild(container.firstChild);
+        const firstViewer = container.firstChild;
+        const titleElem = firstViewer.querySelector(".article-title");
+        if (titleElem) {
+            openDots.delete(titleElem.textContent);
+        }
+        container.removeChild(firstViewer);
+        updateDotSizes();
     }
 
     const viewer = document.createElement("div");
@@ -260,7 +268,11 @@ function addArticleViewer(d) {
     const closeBtn = document.createElement("span");
     closeBtn.className = "close-btn";
     closeBtn.innerHTML = "&times;";
-    closeBtn.onclick = () => viewer.remove();
+    closeBtn.onclick = () => {
+        viewer.remove();
+        openDots.delete(d.meta.title);
+        updateDotSizes();
+    }
 
     viewer.appendChild(closeBtn);
 
@@ -319,4 +331,15 @@ function addArticleViewer(d) {
     viewer.appendChild(content);
 
     container.appendChild(viewer);
+    openDots.add(d.meta.title);
+    updateDotSizes(); // refresh all dot sizes
+
+}
+
+
+function updateDotSizes() {
+    d3.selectAll(".dot")
+        .transition()
+        .duration(300)
+        .attr("r", d => openDots.has(d.meta.title) ? 10 : 6);
 }

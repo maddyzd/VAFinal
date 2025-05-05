@@ -7,8 +7,7 @@ from pathlib import Path
 from haystack.components.builders.prompt_builder import PromptBuilder
 from haystack_integrations.components.generators.google_ai import GoogleAIGeminiGenerator
 from haystack_integrations.document_stores.chroma import ChromaDocumentStore
-from haystack.components.embedders import SentenceTransformersDocumentEmbedder, SentenceTransformersTextEmbedder
-from haystack_integrations.components.retrievers.chroma import ChromaEmbeddingRetriever
+from haystack.components.embedders import SentenceTransformersDocumentEmbedder
 from haystack import Document, Pipeline
 from dotenv import load_dotenv
 import numpy as np
