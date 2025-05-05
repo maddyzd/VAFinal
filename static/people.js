@@ -180,13 +180,12 @@ document.addEventListener("DOMContentLoaded", () => {
       .attr("class", "tooltip")
       .style("position", "fixed")
       .style("padding", "10px")
+      .style("gap", "10px")
       .style("background", "white")
       .style("border", "1px solid #ccc")
       .style("border-radius", "4px")
       .style("pointer-events", "none")
       .style("max-width", "600px")
-      .style("max-height", "300px")
-      .style("overflow-y", "auto")
       .style("white-space", "pre-wrap")
       .style("display", "none")
       .style("z-index", 1000);
@@ -206,40 +205,30 @@ document.addEventListener("DOMContentLoaded", () => {
       
         tooltip.style("display", "block")
                .style("left", `${mouseX + 15}px`)
-               .style("top", `${Math.min(mouseY, 20)}px`)  // Set near top
-               .style("max-height", "none")
-               .style("overflow-y", "auto")
-               .html(`<strong>${d.id}</strong>${bios[d.id] ? `<br/>${bios[d.id]}` : ""}`);
-      
+            //    .style("max-height", "none")
+        
         if (d.group === "GAStech" && !orgNodes.includes(d.id)) {
-          fetchResumeText(d.id).then(text => {
-            if (text) {
-              tooltip.html(`<strong>${d.id}</strong>${bios[d.id] ? `<br/>${bios[d.id]}` : ""}<br/><br/><strong>Resume:</strong><br/><div style='max-height: 400px; overflow-y: auto;'>${text}</div>`);
-            } else {
-              svg.append("text")
-                .attr("class", "temp-label")
-                .attr("x", d.x + 15)
-                .attr("y", d.y - 15)
-                .attr("font-size", 12)
-                .attr("fill", "black")
-                .text(d.id);
-            }
-          });
+            fetchResumeText(d.id).then(text => {
+                if (text) {
+                    tooltip
+                        .style("top", `${Math.min(mouseY, 20)}px`)
+                        .html(`<strong>${d.id}</strong><br/><strong>Resume:</strong><br/><div>${text}</div>`);
+                }
+                else {
+                    tooltip
+                        .style("top", `${mouseY + 10}px`)
+                        .html(`<strong>${d.id}</strong>`);
+                }
+            })
         } else {
-          svg.append("text")
-            .attr("class", "temp-label")
-            .attr("x", d.x + 15)
-            .attr("y", d.y - 15)
-            .attr("font-size", 12)
-            .attr("fill", "black")
-            .text(d.id);
-        }
-      })
+            tooltip
+                .style("top", `${mouseY + 10}px`)
+                .html(`<strong>${d.id}</strong>${bios[d.id] ? `<br/><strong>Bio:</strong>${bios[d.id]}` : ""}<br/>`);
+        }})
       
       .on("mousemove", function (event) {
         const mouseX = event.clientX;
         const mouseY = event.clientY;
-        tooltip.style("left", `${mouseX + 15}px`).style("top", `${Math.min(mouseY, 20)}px`);
       })
       
       .on("mouseout", function () {
