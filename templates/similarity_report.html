@@ -11,25 +11,32 @@
  
     </head>
     <body>
-        <nav>
-            <div class="bar">
-                <a href="/">
-                    <p> Dashboard Home</p>
-                </a>
-                <div class="navlinks">
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const isEmbed = params.has('embed');
+
+        if (!isEmbed) {
+            document.write(`
+              <nav>
+                <div class="bar">
+                  <a href="/"><p> Dashboard Home</p></a>
+                  <div class="navlinks">
                     <a href="/llm" class="navlink">LLM</a>
                     <a href="/timeline" class="navlink">Timeline</a>
                     <a href="/people" class="navlink">People/Orgs</a>
                     <a href="/similarity_report" class="navlink">Similarity Report</a>
                     <a href="/words" class="navlink">Word Cloud</a>
                     <a href="/bias" class="navlink">Bias</a>
+                  </div>
+                  <a href="#" class="hamburger">&#9776;</a>      
                 </div>
-                <a href="#" class="hamburger">&#9776;</a>      
-            </div>
-        </nav>
+              </nav>
+            `);
+          }
+        </script>
         <main style="margin-top: 100px;">
             <div id="similarity_report">
-                <div class="similarity-source-checkboxes">
+                <div id="similarity-source-checkboxes" class="similarity-source-checkboxes">
                     {% set colors = [
                         '#e6194b', '#f58231', '#ffe119', '#bfef45', '#3cb44b',
                         '#42d4f4', '#4363d8', '#911eb4', '#f032e6', '#a9a9a9',
@@ -65,7 +72,6 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        const js_colors = {{colors | tojson}};
 
         $(document).ready(function() {
             setTimeout(function() {
@@ -81,12 +87,20 @@
             const hamburger = document.querySelector('.hamburger');
             const navLinks = document.querySelector('.navlinks');
 
-            hamburger.addEventListener('click', function () {
-                navLinks.classList.toggle('show');
-            });
+            if (hamburger && navLinks) {
+                hamburger.addEventListener('click', function () {
+                  navLinks.classList.toggle('show');
+                });
+            }
+            if (window.location.search.includes('embed=true')) {
+                console.log("I'm embedding the sim report!")
+                const sidebar = document.getElementById("similarity-source-checkboxes");
+                console.log(sidebar)
+                if (sidebar) sidebar.style.display = "none";
+            }
+            
             })
 
-          
          </script>
          <script src="static/similarity_report.js"></script>
 

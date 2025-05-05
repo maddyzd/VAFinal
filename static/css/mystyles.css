@@ -155,8 +155,35 @@ font:
     background-color: #f9f9f9;
 }
 
-  
-  
+.screenshots {
+    display: flex;
+    flex-wrap: wrap; /* allow wrapping to new lines */
+    justify-content: center; /* center the row contents */
+    gap: 4px; /* space between images */
+    padding: 4px;
+}
 
-    
-   
+.screenshot-container {
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    color: darkgray;
+    font-size: 28pt;
+    width: 450px;
+    height: 200px; /* fixed width to control layout */
+}
+
+.title-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+    pointer-events: none; /* so clicking still triggers the link */
+}
+
+.title-text h1 {
+    font-size: 44px;
+    margin: 0;
+}

@@ -1,153 +1,171 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Homepage</title>
-  <link rel="stylesheet" href="static/css/mystyles.css" />
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Helvetica Neue', sans-serif;
-      background-color: #fffaf2;
-    }
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width", initial-scale="1">    
+        <title> homepage </title>
+        <link rel="stylesheet" href="static/css/mystyles.css" />
+        <style type="text/css">
 
-    .spacer1 {
-      height: 200px;
-      background-color: #F5CC97;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 0 20px;
-      box-sizing: border-box;
-      margin-top: 0;
-      color: #000;
-      font-size: 40px;
-    }
+            .spacer1 {
+                height: 100px;
+                background-color: #F5CC97 ;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 0 20px; 
+                box-sizing: border-box; 
+                color: #F55D33;
+                font-size: 40px;
+            }
 
-    .spacer1 h1 {
-      color: #000;
-      font-size: 43px;
-      font-weight: normal;
-      margin: 0;
-    }
+            .spacer1 h1 {
+                color: #F55D33;
+                font-size: 43px;
+                margin-right: 20px;
+                font-weight: normal;
+            }
 
-    .dashboard-section {
-      padding: 60px 40px;
-      background-color: #fffaf2;
-    }
+            .text {
+                color: #F55D33;
+                font-size: 20px;
+                max-width: 800px;
+                opacity: 0;
+                margin: 0 auto;
+                transition: opacity 1s ease-in-out;
+                line-height: 1.6;
+                font-weight: bold;
+            }
 
-    .iframe-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 30px;
-      max-width: 1200px;
-      margin: auto;
-      justify-content: center;
-    }
+            .fade{
+                color: #F55D33;
+                font-size: 40px;
+                opacity: 0;
+                transition: opacity 1s ease-in-out;
+            }
 
-    .iframe-tile {
-      position: relative;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s;
-      background-color: white;
-    }
+            .screenshot-container {
+                text-align: center;
+                margin: 60px auto;
+                max-width: 90%;
+            }
 
-    .iframe-tile:hover {
-      transform: scale(1.02);
-    }
+            .screenshot-img {
+                max-width: 100%;
+                height: auto;
+                border: 2px solid #F55D33;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                transition: transform 0.3s ease;
+                cursor: pointer;
+            }
 
-    .iframe-tile iframe {
-      width: 100%;
-      height: 250px;
-      border: none;
-      pointer-events: none;
-      overflow: hidden;
-    }
+            .screenshot-img:hover {
+                transform: scale(1.03);
+            }
 
-    .iframe-tile a {
-      text-decoration: none;
-      color: inherit;
-      display: block;
-    }
+            @media (max-width: 499px) {
+                .fade {
+                    font-size:30px;
+                }
+            }
 
-    .label {
-      text-align: center;
-      font-size: 28px;
-      padding: 12px 0;
-      color: #000;
-      font-weight: bold;
-      background-color: #fff;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+            @media screen and (min-width: 900px) {
+                .spacer1 h1 {
+                display: block;
+                }
+            }
 
-    @media (max-width: 1100px) {
-      .iframe-grid {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      }
-    }
-  </style>
-</head>
-<body>
+            @media screen and (max-width: 899px) {
+                .spacer1 h1 {
+                    display: none;
+                }
+            }
+        </style>  
+    </head>
+    <body>
 
-  <div class="spacer1">
-    <h1>Mini Challenge 1: Text Analysis</h1>
-  </div>
-
-  <section class="dashboard-section">
-    <div class="iframe-grid">
-      <div class="iframe-tile">
-        <a href="/llm" target="_blank">
-          <div class="label">LLM</div>
-          <div style="height: 250px; overflow-y: scroll;">
-          <iframe src="/llm?embed=true" title="LLM Preview"></iframe>
-          </div>
-        </a>
-      </div>
-      <div class="iframe-tile">
-        <a href="/timeline" target="_blank">
-          <div class="label">Timeline</div>
-          <div style="height: 250px; overflow-y: scroll;">
-            <iframe src="/timeline?embed=true" title="Timeline Preview" style="height: 500px;"></iframe>
-          </div>
-        </a>
-      </div>      
-
-      <div class="iframe-tile">
-        <a href="/words" target="_blank">
-            <div class="label">Word Cloud</div>
-            <div style="height: 250px; overflow-y: scroll;">
-                <iframe src="/words?embed=true" title="Word Cloud Preview" style="height: 500px;"></iframe>
-            </div>
-          </a>          
-      </div>
-      <div class="iframe-tile">
-        <a href="/people" target="_blank">
-          <div class="label">People/Orgs</div>
-          <div style="height: 250px; overflow-y: scroll;">
-          <iframe src="/people?embed=true" title="People/Orgs Preview"></iframe>
+        <div class="spacer1">
+            <h1> Mini Challenge 1: </h1> 
+            <div class="fade">
+               Text Analysis
+            </div>      
         </div>
-        </a>
-      </div>
-      <div class="iframe-tile">
-        <a href="/similarity_report" target="_blank">
-          <div class="label">Similarity Report</div>
-          <iframe src="/similarity_report?embed=true" title="Similarity Report Preview"></iframe>
-        </a>
-      </div>
-      <div class="iframe-tile">
-        <a href="/bias" target="_blank">
-          <div class="label">Bias</div>
-          <iframe src="/bias?embed=true" title="Bias Preview"></iframe>
-        </a>
-      </div>
-    </div>
-  </section>
 
-</body>
+        <section class="section1"> </section>
+        
+        <div class="spacer2">
+            <div class="text"></div>
+        </div>
+
+        <section class="section2"> </section>
+
+        <section class="screenshots">
+            <div class="screenshot-container">
+                <a href="/llm">
+                    <img src="../static/screenshots/bulk-image-crop/llm.png" width="550" alt="LLM Screenshot" class="screenshot-img">
+                    <div class="title-text"><h1>LLM</h1></div>
+                </a>
+            </div>
+
+            <div class="screenshot-container">
+                <a href="/timeline">
+                    <img src="../static/screenshots/bulk-image-crop/timeline.png" width="550" alt="Timeline Screenshot" class="screenshot-img">
+                    <div class="title-text"><h1>Timeline</h1></div>
+                </a>
+            </div>
+
+            <div class="screenshot-container">
+                <a href="/people">
+                    <img src="../static/screenshots/bulk-image-crop/people.png" width="550" alt="People/Orgs Screenshot" class="screenshot-img">
+                    <div class="title-text"><h1>People/Orgs</h1></div>
+                </a>
+            </div>
+
+
+            <div class="screenshot-container">
+                <a href="/similarity_report">
+                    <img src="../static/screenshots/bulk-image-crop/simreport.png" width="550" alt="SimReport Screenshot" class="screenshot-img">
+                    <div class="title-text"><h1>Similarity Report</h1></div>
+                </a>
+            </div>
+
+            <div class="screenshot-container">
+                <a href="/words">
+                    <img src="../static/screenshots/bulk-image-crop/wordcloud.png" width="550" alt="Word Cloud Screenshot" class="screenshot-img">
+                    <div class="title-text"><h1>Word Cloud</h1></div>
+                </a>
+            </div>
+
+            <div class="screenshot-container">
+                <a href="/bias">
+                    <img src="../static/screenshots/bulk-image-crop/bias.png" width="550" alt="Word Cloud Screenshot" class="screenshot-img">
+                    <div class="title-text"><h1>Bias</h1></div>
+                </a>
+            </div>
+
+        </section>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                setTimeout(function() {
+                    $('.fade').fadeTo(400, 1);
+                    $('.text').fadeTo(300, 1);
+                    $('.review').fadeTo(300, 1);
+                }, 300);
+            });
+        </script>
+        <script>
+           document.addEventListener('DOMContentLoaded', function () {
+                const hamburger = document.querySelector('.hamburger');
+                const navLinks = document.querySelector('.navlinks');
+
+                hamburger.addEventListener('click', function () {
+                    navLinks.classList.toggle('show');
+                });
+            });
+        </script>
+
+    </body>
 </html>
