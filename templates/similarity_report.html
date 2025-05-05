@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width", initial-scale="1">    
+        <title> Similarity Report </title>
+        <link rel="stylesheet" href="static/css/mystyles.css" />
+        <link rel="stylesheet" href="static/css/similarity_report.css" />
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+
+ 
+    </head>
+    <body>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const isEmbed = params.has('embed');
+
+        if (!isEmbed) {
+            document.write(`
+              <nav>
+                <div class="bar">
+                  <a href="/"><p> Dashboard Home</p></a>
+                  <div class="navlinks">
+                    <a href="/llm" class="navlink">LLM</a>
+                    <a href="/timeline" class="navlink">Timeline</a>
+                    <a href="/people" class="navlink">People/Orgs</a>
+                    <a href="/similarity_report" class="navlink">Similarity Report</a>
+                    <a href="/words" class="navlink">Word Cloud</a>
+                    <a href="/bias" class="navlink">Bias</a>
+                  </div>
+                  <a href="#" class="hamburger">&#9776;</a>      
+                </div>
+              </nav>
+            `);
+          }
+        </script>
+        <main style="margin-top: 100px;">
+            <div id="similarity_report">
+                <div id="similarity-source-checkboxes" class="similarity-source-checkboxes">
+                    {% set colors = [
+                        '#e6194b', '#f58231', '#ffe119', '#bfef45', '#3cb44b',
+                        '#42d4f4', '#4363d8', '#911eb4', '#f032e6', '#a9a9a9',
+                        '#fabebe', '#ffd8b1', '#fffac8', '#d9ead3', '#aaffc3',
+                        '#dcbeff', '#aaffaa', '#aabaff', '#ffbaff', '#ffdfba',
+                        '#baffc9', '#bae1ff', '#c0c0c0', '#ffb347', '#ff6961',
+                        '#fdfd96', '#77dd77', '#aec6cf', '#cbaacb'
+                      ] %}
+                    <div id="checkbox-header">
+                        <h2>Sources</h2>
+                        <input type="button" class="sim-button" name="deselect-all" value="Deselect All" onclick="updateAllCheckboxes(false)">
+                        <input type="button" class="sim-button" name="select-all" value="Select All" onclick="updateAllCheckboxes(true)">
+                    </div>
+                    {% for source in news_sources %}
+                        {% set color = colors[loop.index0 % colors|length] %}
+                        <label class="{{ source|replace(' ', '-') }}-label" style="background-color: {{ color }}40; padding: 4px 8px; border-radius: 6px;">
+                            <input type="checkbox" name="source" class="sim-checkbox" value="{{ source }}" checked>
+                            {{ source }}
+                            <svg width="20" height="16">
+                                <circle class="{{ source|replace(' ', '-') }}" cx="10" cy="9" r="6" fill="{{ color }}" stroke="black" stroke-width="1"/>
+                            </svg>
+                        </label>
+                    {% endfor %}
+                </div>
+                <div id="report">
+                    <input type="button" class="sim-generate-button" id="generate-similarity-report" value="Recompute PCA">
+                    <div id="similarity-scatterplot"></div>
+                    <div id="article-viewer-container"></div>
+                </div>
+            </div>
+        </main>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+
+        $(document).ready(function() {
+            setTimeout(function() {
+                $('.fade').fadeTo(400, 1);
+                $('.text').fadeTo(300, 1);
+                $('.review').fadeTo(300, 1);
+            }, 300);
+         
+        });
+    </script>
+        <script>
+           document.addEventListener('DOMContentLoaded', function () {
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.navlinks');
+
+            if (hamburger && navLinks) {
+                hamburger.addEventListener('click', function () {
+                  navLinks.classList.toggle('show');
+                });
+            }
+            if (window.location.search.includes('embed=true')) {
+                console.log("I'm embedding the sim report!")
+                const sidebar = document.getElementById("similarity-source-checkboxes");
+                console.log(sidebar)
+                if (sidebar) sidebar.style.display = "none";
+            }
+            
+            })
+
+         </script>
+         <script src="static/similarity_report.js"></script>
+
+
+    </body>
+</html>

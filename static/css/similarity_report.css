@@ -1,0 +1,147 @@
+.similarity-source-checkboxes {
+    position: fixed;
+    top: 60px;                  /* aligns with your header */
+    left: 10px;
+    width: 275px;                /* adjust to fit your layout */
+    max-height: calc(98vh - 100px); /* fills height below header */
+    overflow-y: auto;
+    padding: 10px 15px;
+    background-color: #f8f8f8;
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sim-generate-button {
+    margin-left: 240px;
+}
+
+
+.similarity-source-checkboxes h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid gray; /* black horizontal bar */
+    text-align: left;
+  }
+
+.similarity-source-checkboxes label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    cursor: pointer;
+}
+.similarity-source-checkboxes input[type="checkbox"] {
+    margin-right: 8px;
+}
+  
+#report {
+    margin-left: 350px;
+    
+   
+}
+
+#generate-similarity-report {
+    margin-bottom: 10px;
+}
+
+#similarity_scatterplot {
+    margin-top: 20px;
+    margin-left: 0px;
+}
+
+.tooltip {
+    text-align: left;
+}
+
+.tooltip-meta-title {
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.tooltip-meta-content {
+    margin-left: 5px;
+}
+
+
+#article-viewer-container {
+    position: fixed;
+    top: 100px; 
+    right: 20px;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 400px;
+}
+  
+.article-viewer {
+    background-color: white;
+    border: 1px solid #aaa;
+    padding: 10px 15px;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    max-height: 300px;
+    overflow-y: auto;
+    position: relative;
+    font-family: sans-serif;
+}
+  
+.article-viewer h3 {
+    margin-top: 0;
+    font-size: 16px;
+    display: inline-block;
+    margin-right: 4px;
+    margin-bottom: 0;
+}
+
+.article-viewer .close-btn {
+    position: absolute;
+    top: 6px;
+    right: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 18px;
+    color: #999;
+}
+  
+.article-viewer .close-btn:hover {
+    color: red;
+}
+  
+.article-content {
+    font-size: 14px;
+    line-height: 1.4;
+    white-space: pre-wrap;
+}
+
+.article-source {
+    font-style: italic;
+}
+
+.article-source::before {
+    content: "📰 ";
+    font-style: normal;  /* 👈 prevent italics just for the emoji */
+}
+
+.article-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.article-published {
+    color: gray;
+}
+
+.article {
+    display: block;
+}
+
+.article-header {
+    margin-bottom: 10px;
+}
+.source-emoji {
+    display: inline;
+}
